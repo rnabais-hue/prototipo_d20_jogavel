@@ -1,55 +1,94 @@
 ﻿# MVP Scope
 
-This document defines the closed scope for the initial MVP of the **custom d20-inspired tactical RPG prototype**.
+This document defines the scope of the **custom d20-inspired tactical RPG prototype**: what the
+MVP has absorbed, and what stays out until the project owner asks for it.
 
-The MVP should remain small. New features are out of scope until explicitly requested.
+It is a current-state document. Together with `README.md` it is updated whenever a milestone is
+closed, so that neither ever describes a project that no longer exists.
 
 ## Inside the Current MVP
 
-The current MVP includes only:
+Each item below is implemented, tested, and closed by the document named next to it. Where no
+closeout is named, the source file is the reference.
 
-- TypeScript project foundation.
-- Vite app shell.
-- Phaser dependency and a minimal scene that opens in the browser.
-- Vitest setup with at least one simple unit test.
-- Layer folder structure:
-  - `src/rules/`
-  - `src/content/`
-  - `src/game/`
-  - `src/exploration/`
-  - `src/combat/`
-  - `src/movement/`
-  - `src/narrative/`
-  - `src/ui/`
-- Documentation for architecture, scope, workflow, content, narrative direction, rules, roadmap, and decisions.
+### Foundation
+
+- TypeScript project foundation, Vite app shell, Phaser scene, Vitest suite.
+- Layer folder structure: `src/rules/`, `src/content/`, `src/game/`, `src/exploration/`,
+  `src/combat/`, `src/movement/`, `src/cli/`, `src/narrative/`, `src/ui/`. The last two are
+  still empty placeholders.
+- Documentation for architecture, scope, workflow, content, narrative direction, rules, roadmap,
+  and decisions.
+
+### Movement and exploration
+
+- Pure grid conversion, actor movement state, Manhattan move range and straight path preview
+  (`src/movement/`).
+- Grid interaction and click-to-move over orthogonal pathfinding, with path preview and blocked
+  path feedback (`src/exploration/orthogonalPathfinding.ts`,
+  `src/game/scenes/PrototypeScene.ts`).
+- Exploration map with static blocked cells and switch-controlled blockers
+  (`src/exploration/explorationMap.ts`, `src/exploration/switchControlledMap.ts`).
+- Interest points — survey, switch, exit marker, combat trigger — with pure interaction results,
+  a switch-gated exit, and a local objective read model (`src/exploration/interestPoint.ts`,
+  `src/rules/exitActivation.ts`, `src/rules/localObjective.ts`).
+  Baseline: `docs/EXPLORATION_DEBUG_BASELINE.md`.
+
+### Combat
+
+- Combat as a whole: encounters, turn flow, action declaration, checks, basic attacks, damage,
+  defeat and outcome, all pure in `src/rules/`.
+  Closeout: `docs/TACTICAL_CORE_V0_CLOSEOUT.md`.
+- Turn order supplied by the caller, with defeated participants skipped
+  (decisions 0029, 0035, 0036). Rolled initiative is still out of scope.
+- Damage application and simple defeat as encounter state (decisions 0033, 0034).
+- Enemies: a scripted opponent that acts automatically on its turn
+  (`src/combat/enemyScript.ts`).
+- Tactical grid positioning, per-turn movement allowance and weapon range bands.
+  Closeout: `docs/COMBAT_GRID_MOVEMENT_CLOSEOUT_V1.md`.
+- A single playable sheet with attributes, a trained skill, weapons, actions, one ability and a
+  spendable resource pool, expressed as content data (`src/content/combatPresets.ts`,
+  `src/combat/combatResources.ts`).
+- Exploration-to-combat integration inside one Phaser scene, with a numeric action menu, combat
+  log console, return on victory and restart on defeat.
+  Closeout: `docs/EXPLORATION_COMBAT_INTEGRATION_CLOSEOUT_V1.md`.
+- Terminal harness for manual combat playtesting (`npm run combat:cli`).
+  Closeout: `docs/COMBAT_CLI_HARNESS_CLOSEOUT_V1.md`.
+
+### Presentation
+
+- Combat visual feedback: HP bars, floating text, hit flashes, turn indicator, outcome banners.
+  Closeout: `docs/COMBAT_VISUAL_FEEDBACK_CLOSEOUT_V1.md`.
+- Asset catalog with code-native fallbacks, actor animations, motion queue, responsive layout,
+  and a normal / debug presentation toggle.
+  Closeout: `docs/PLAYABLE_PRESENTATION_CLOSEOUT_V1.md`.
 
 ## Outside the Current MVP
 
-Do not implement these in the current MVP:
+Do not implement these unless the user explicitly asks:
 
-- Combat.
-- Initiative.
-- Damage.
-- Conditions.
-- Enemies.
-- Player character systems.
-- Movement.
-- Click-to-move.
-- Grid or tile interaction.
-- Powers, abilities, spells, feats, classes, or ancestry systems.
-- Inventory or equipment.
-- Narrative engine.
-- Dialogue system.
-- Quest system.
-- Lore, setting, factions, places, named characters, or worldbuilding.
+- Rolled initiative and initiative order as a rule.
+- Conditions, status effects, buffs and debuffs.
+- Character creation, progression, levelling, or more than the single playable sheet.
+- Classes, ancestries, feats, spell lists, or a general power system beyond the existing single
+  ability with a resource cost.
+- Inventory and equipment management. Weapons exist only as fixed content data on a sheet.
+- Encounters or maps beyond the debug exploration map and the existing presets; no level or
+  encounter authoring pipeline.
+- Narrative engine, dialogue system, quest system.
 - Save/load.
 - Audio.
-- Complex assets.
-- Official IP, official names, official lore, official texts, official rules text, or official art.
+- Production art and complex assets.
+- Lore, setting, factions, places, named characters, or worldbuilding.
+- Official IP, official names, official lore, official texts, official rules text, or official
+  art, under the rule in `AGENTS.md`.
 
 ## Scope Change Rule
 
-A feature enters scope only when the user explicitly requests it. When adding a feature later, keep it narrow, document the decision, and preserve the architecture rule that `src/rules/` remains pure.
+A feature enters scope only when the user explicitly requests it. When adding a feature later,
+keep it narrow, record the decision in `docs/DECISIONS.md`, preserve the architecture rule that
+`src/rules/` remains pure, and move the feature from the list above into "Inside the Current
+MVP" in the same piece of work.
 
 ## Validation Commands
 

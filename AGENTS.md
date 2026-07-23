@@ -113,3 +113,7 @@ If the local environment lacks global Node/NPM, explain the limitation and valid
 - Keep changes small and traceable.
 - Add tests for pure rules when rules are introduced later.
 - Update `docs/DECISIONS.md` when making an architectural decision.
+- When closing any milestone, update the current state in `README.md` and `docs/MVP_SCOPE.md` in
+  the same piece of work. A closeout that leaves those two documents describing the previous
+  state is not finished. They are the current-state documents; everything else in `docs/` is
+  historical record and is never edited after the fact.
