@@ -1,0 +1,231 @@
+{
+  "status": "Revision Requested",
+  "human_gate": "Pending",
+  "icons": {
+    "attack": {
+      "runtime_sha256": "9BAB4D7AF86C5DB642080CF6AD0B58055F77EADCA08021084EC354749921013B",
+      "runtime_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "corner_alpha": [
+          0,
+          143,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 60,
+        "touches_bounds": true
+      },
+      "revision_sha256": "551DFFCAA1D8BC4A36B9398F9EC2A2B8BD469C495946AEDD1F9ED1345B482F81",
+      "revision_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          2,
+          2,
+          30,
+          30
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 0,
+        "touches_bounds": false
+      },
+      "revision_processing": "Whole 32x32 derivative reduced to 28x28 with Lanczos and centered with a 2px transparent safety margin; diagnostic candidate only."
+    },
+    "move": {
+      "runtime_sha256": "BCFD0991F3963DD0B4F94D00C3AA9ED69089ABD786190716D3048A4BD7228D90",
+      "runtime_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          126,
+          0
+        ],
+        "nontransparent_edge_pixels": 42,
+        "touches_bounds": true
+      },
+      "revision_sha256": "15B021D983B7D1CAC91014C7DF7D1DB96E54E351FA91CD9781D7C15063C35E4A",
+      "revision_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          2,
+          2,
+          30,
+          30
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 0,
+        "touches_bounds": false
+      },
+      "revision_processing": "Whole 32x32 derivative reduced to 28x28 with Lanczos and centered with a 2px transparent safety margin; diagnostic candidate only."
+    },
+    "inspect": {
+      "runtime_sha256": "85FED7EFCA83CAFA9DBC1B250166C8BE2525CA2251AE441C44B832555B28A58F",
+      "runtime_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          0,
+          2,
+          32,
+          30
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 16,
+        "touches_bounds": true
+      },
+      "revision_sha256": "096F831532C365AA282EAF908BA731C0910092B1E559EE517D8A8D7876695967",
+      "revision_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          2,
+          3,
+          30,
+          29
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 0,
+        "touches_bounds": false
+      },
+      "revision_processing": "Whole 32x32 derivative reduced to 28x28 with Lanczos and centered with a 2px transparent safety margin; diagnostic candidate only."
+    },
+    "end-turn": {
+      "runtime_sha256": "A1BB1D31FF4246BEDD0DA20BD3106DCC35F16324DCB6F03CFF2AA5059432A1D3",
+      "runtime_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          3,
+          0,
+          29,
+          32
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 48,
+        "touches_bounds": true
+      },
+      "revision_sha256": "071D98B7EDD6079897EA37D275401A601B7CE7BD73972B46F345E936C941BCD1",
+      "revision_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          4,
+          2,
+          28,
+          30
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 0,
+        "touches_bounds": false
+      },
+      "revision_processing": "Whole 32x32 derivative reduced to 28x28 with Lanczos and centered with a 2px transparent safety margin; diagnostic candidate only."
+    },
+    "turn-marker": {
+      "runtime_sha256": "2B878DFD98ABFA6BB235A9F1E8E19FD0FB8CBBED5CC2EFC7252F199B722ECC9B",
+      "runtime_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 59,
+        "touches_bounds": true
+      },
+      "revision_sha256": "236D46760A404D64F56586C7749BA8EF36E549468E4A9E16FC60BB32AC0D89A6",
+      "revision_metrics": {
+        "size": [
+          32,
+          32
+        ],
+        "alpha_bbox": [
+          2,
+          2,
+          30,
+          30
+        ],
+        "corner_alpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nontransparent_edge_pixels": 0,
+        "touches_bounds": false
+      },
+      "revision_processing": "Whole 32x32 derivative reduced to 28x28 with Lanczos and centered with a 2px transparent safety margin; diagnostic candidate only."
+    }
+  }
+}

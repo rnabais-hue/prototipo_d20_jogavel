@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(awk '{printf \"%.1f MB  %s\\\\n\", $1/1048576, $2}')",
+      "Bash(pnpm -v)",
+      "WebSearch",
+      "WebFetch(domain:jamboeditora.com.br)",
+      "Bash(awk '{printf \"%6.1f KB  %s\\\\n\", $1/1024, $2}')",
+      "Bash(awk '{printf \"%5s linhas  %s\\\\n\", $1, $2}')",
+      "Bash(git --version)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git -c user.name=rnabais -c user.email=rnabais@gmail.com commit -q -m ' *)"
+    ]
+  }
+}

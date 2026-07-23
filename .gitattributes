@@ -1,0 +1,11 @@
+# Normalize line endings so multi-agent edits on Windows do not produce
+# whole-file diffs that make pull requests unreviewable.
+* text=auto
+
+# Binary assets and proof packages must never be line-ending normalized.
+*.png binary
+*.gif binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary

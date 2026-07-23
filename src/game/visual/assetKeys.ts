@@ -1,0 +1,34 @@
+export const VISUAL_ASSET_KEYS = {
+  explorationGround: 'visual.exploration.terrain.ground',
+  combatGround: 'visual.combat.terrain.ground',
+  wallObstacle: 'visual.world.obstacle.wall',
+  playerActor: 'visual.actor.player',
+  playerActorMovement: 'visual.actor.player.movement',
+  playerActorAttack: 'visual.actor.player.attack',
+  playerActorHit: 'visual.actor.player.hit',
+  playerActorDefeat: 'visual.actor.player.defeat',
+  enemyActor: 'visual.actor.enemy',
+  enemyActorAttack: 'visual.actor.enemy.attack',
+  enemyActorHit: 'visual.actor.enemy.hit',
+  enemyActorDefeat: 'visual.actor.enemy.defeat',
+  surveyPoint: 'visual.poi.survey',
+  switchPoint: 'visual.poi.switch',
+  exitPoint: 'visual.poi.exit',
+  encounterPoint: 'visual.poi.encounter',
+  attackEffect: 'visual.effect.attack',
+  damageEffect: 'visual.effect.damage',
+  defeatEffect: 'visual.effect.defeat',
+  attackIcon: 'visual.ui.icon.attack',
+  moveIcon: 'visual.ui.icon.move',
+  inspectIcon: 'visual.ui.icon.inspect',
+  endTurnIcon: 'visual.ui.icon.end_turn',
+  turnMarkerIcon: 'visual.ui.icon.turn_marker',
+  panelTexture: 'visual.ui.panel.standard',
+  borderTexture: 'visual.ui.border.standard',
+} as const;
+
+export type VisualAssetKey = typeof VISUAL_ASSET_KEYS[keyof typeof VISUAL_ASSET_KEYS];
+
+export const ALL_VISUAL_ASSET_KEYS: readonly VisualAssetKey[] = Object.freeze(
+  Object.values(VISUAL_ASSET_KEYS),
+);

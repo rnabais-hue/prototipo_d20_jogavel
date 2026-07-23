@@ -1,0 +1,105 @@
+{
+  "milestone": "A7 - Actor Spritesheets",
+  "date": "2026-07-21",
+  "status": "Candidate",
+  "scope": "proof-only",
+  "integrationPerformed": false,
+  "catalogChanged": false,
+  "publicAssetsChanged": false,
+  "runtimeLoadingEnabled": false,
+  "actors": {
+    "player": {
+      "approvedStatic": "sources/approved-player.png",
+      "approvedIdentity": "P2R1",
+      "logicalSize": [32, 32],
+      "anchor": [0.5, 0.82],
+      "feetBaselineMasterY": 210,
+      "masterSheet": "player/sheets/player-all-states-15f-256.png",
+      "recommendations": {
+        "idle": "Approve",
+        "movement": "Reject / Not Applicable - enemy has no movement capability in current gameplay",
+        "attack": "Approve",
+        "hit": "Approve",
+        "defeat": "Approve"
+      }
+    },
+    "enemy": {
+      "approvedStatic": "sources/approved-enemy.png",
+      "approvedIdentity": "M2",
+      "logicalSize": [32, 32],
+      "anchor": [0.5, 0.82],
+      "feetBaselineMasterY": 210,
+      "weapon": "none; weapon-neutral by design",
+      "masterSheet": "enemy/sheets/enemy-all-states-15f-256.png",
+      "recommendations": {
+        "idle": "Revision Requested",
+        "movement": "Revision Requested",
+        "attack": "Approve",
+        "hit": "Revision Requested",
+        "defeat": "Approve"
+      }
+    }
+  },
+  "sheetLayout": {
+    "frameWidth": 256,
+    "frameHeight": 256,
+    "framesPerState": 3,
+    "stateSheetColumns": 3,
+    "fullSheetColumns": 3,
+    "fullSheetRows": 5,
+    "fullSheetFrameCount": 15,
+    "fullSheetStateOrder": ["idle", "movement", "attack", "hit", "defeat"],
+    "frameOrderWithinState": [0, 1, 2]
+  },
+  "proposedPlayback": {
+    "idle": {"semanticAction": "subtle breathing/tension", "durationsMs": [400, 400, 400], "loop": true, "suggestedLoopOrder": [0, 1, 2, 1]},
+    "movement": {"semanticAction": "controlled walk", "durationsMs": [100, 100, 100], "loop": true, "suggestedLoopOrder": [0, 1, 2]},
+    "attack": {"semanticAction": "anticipation, compact action, recovery", "durationsMs": [80, 100, 70], "loop": false, "totalMs": 250},
+    "hit": {"semanticAction": "brace, recoil, recovered center", "durationsMs": [40, 70, 40], "loop": false, "totalMs": 150},
+    "defeat": {"semanticAction": "stagger, collapse, final hold", "durationsMs": [90, 100, 110], "loop": false, "holdFinalFrame": true, "totalMs": 300}
+  },
+  "animatedProofs": {
+    "format": "GIF on solid #10141B review background; proof-only, not a runtime asset",
+    "variants": ["256x256 master preview", "32x32 logical reduction enlarged to 256x256 with nearest-neighbor for inspection"],
+    "playerStates": ["idle", "movement", "attack", "hit", "defeat"],
+    "enemyStates": ["idle", "attack", "hit", "defeat"],
+    "enemyMovementOmitted": "The current enemy has no gameplay movement capability; no animated movement preview is emitted to avoid implying an unsupported behavior."
+  },
+  "generation": {
+    "tool": "OpenAI built-in image generator",
+    "model": null,
+    "version": null,
+    "seed": null,
+    "note": "Model, version, and seed were not exposed by the tool and are not inferred.",
+    "completePrompts": "sources/PROMPTS.md",
+    "directReferences": ["sources/approved-player.png", "sources/approved-enemy.png"]
+  },
+  "processing": [
+    "Copied approved actor masters byte-for-byte into proof sources.",
+    "Generated one three-pose chroma strip per actor and semantic state.",
+    "Removed sampled border chroma with the installed imagegen remove_chroma_key.py helper using --auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill.",
+    "Split each 1536x1024 strip into three equal 512x1024 source panels.",
+    "Computed one conservative global scale per actor from the tallest upright alpha bound so no upright frame touched the top edge.",
+    "Centered every alpha bound horizontally on x=128 and aligned its bottom to master y=210 on a 256x256 RGBA canvas.",
+    "Downsampled review images with Lanczos to 32, 22, 16, and 14 pixels.",
+    "Composited proofs on #10141B, #F4F0E8, #FF00FF, grayscale, and marked cell-contact panels.",
+    "Computed SHA-256 for all files in SHA256SUMS.txt."
+  ],
+  "diagnostics": {
+    "machineReadableMetrics": "diagnostics/frame-metrics.json",
+    "sha256Index": "SHA256SUMS.txt",
+    "emptyFrames": 0,
+    "opaqueCorners": 0,
+    "visibleMagentaLikePixels": 0,
+    "baselineBottomYAllFrames": 209,
+    "crop": "none after conservative rescale",
+    "knownLimitations": [
+      "AI edits repaint pixels beyond the intended articulated pose changes; identity preservation is visual, not pixel-exact.",
+      "Player movement is 188 px high versus 198 px for the approved static and reads slightly smaller.",
+      "Enemy center idle silhouette IoU versus approved static is 0.7473 with common-area RGB MAE 35.049/255.",
+      "Enemy movement alpha width varies from 95 to 123 px, which may read as scale/silhouette breathing.",
+      "Enemy first hit pose resembles a guarded/attack pose, weakening semantic separation.",
+      "No runtime playback or cancellation behavior was changed or tested with these sheets because this gate is proof-only."
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "custom-d20-inspired-tactical-rpg-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "custom d20-inspired tactical RPG prototype",
+  "scripts": {
+    "dev": "vite",
+    "combat:cli": "vite-node src/cli/combatCli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
+
+

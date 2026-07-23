@@ -1,0 +1,426 @@
+{
+  "actors": {
+    "player": {
+      "canonicalRawHeight": 581,
+      "normalizationScale": 0.3442340791738382,
+      "states": {
+        "idle": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              65,
+              11,
+              191,
+              210
+            ],
+            "width": 126,
+            "height": 199,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              64,
+              10,
+              191,
+              210
+            ],
+            "width": 127,
+            "height": 200,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              64,
+              10,
+              191,
+              210
+            ],
+            "width": 127,
+            "height": 200,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "movement": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              74,
+              22,
+              183,
+              210
+            ],
+            "width": 109,
+            "height": 188,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              75,
+              22,
+              181,
+              210
+            ],
+            "width": 106,
+            "height": 188,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              73,
+              22,
+              183,
+              210
+            ],
+            "width": 110,
+            "height": 188,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "attack": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              70,
+              27,
+              187,
+              210
+            ],
+            "width": 117,
+            "height": 183,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              74,
+              36,
+              181,
+              210
+            ],
+            "width": 107,
+            "height": 174,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              71,
+              29,
+              185,
+              210
+            ],
+            "width": 114,
+            "height": 181,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "hit": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              66,
+              11,
+              191,
+              210
+            ],
+            "width": 125,
+            "height": 199,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              78,
+              31,
+              179,
+              210
+            ],
+            "width": 101,
+            "height": 179,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              66,
+              11,
+              191,
+              210
+            ],
+            "width": 125,
+            "height": 199,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "defeat": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              52,
+              10,
+              203,
+              210
+            ],
+            "width": 151,
+            "height": 200,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              58,
+              65,
+              199,
+              210
+            ],
+            "width": 141,
+            "height": 145,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              52,
+              137,
+              204,
+              210
+            ],
+            "width": 152,
+            "height": 73,
+            "bottom": 209,
+            "empty": false
+          }
+        ]
+      }
+    },
+    "enemy": {
+      "canonicalRawHeight": 617,
+      "normalizationScale": 0.3241491085899514,
+      "states": {
+        "idle": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              76,
+              25,
+              179,
+              210
+            ],
+            "width": 103,
+            "height": 185,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              78,
+              25,
+              179,
+              210
+            ],
+            "width": 101,
+            "height": 185,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              79,
+              25,
+              177,
+              210
+            ],
+            "width": 98,
+            "height": 185,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "movement": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              70,
+              11,
+              185,
+              210
+            ],
+            "width": 115,
+            "height": 199,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              66,
+              10,
+              189,
+              210
+            ],
+            "width": 123,
+            "height": 200,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              80,
+              11,
+              175,
+              210
+            ],
+            "width": 95,
+            "height": 199,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "attack": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              73,
+              20,
+              183,
+              210
+            ],
+            "width": 110,
+            "height": 190,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              56,
+              33,
+              201,
+              210
+            ],
+            "width": 145,
+            "height": 177,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              76,
+              25,
+              179,
+              210
+            ],
+            "width": 103,
+            "height": 185,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "hit": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              68,
+              19,
+              187,
+              210
+            ],
+            "width": 119,
+            "height": 191,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              78,
+              54,
+              178,
+              210
+            ],
+            "width": 100,
+            "height": 156,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              76,
+              20,
+              181,
+              210
+            ],
+            "width": 105,
+            "height": 190,
+            "bottom": 209,
+            "empty": false
+          }
+        ],
+        "defeat": [
+          {
+            "index": 0,
+            "alphaBounds": [
+              75,
+              21,
+              181,
+              210
+            ],
+            "width": 106,
+            "height": 189,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 1,
+            "alphaBounds": [
+              72,
+              61,
+              183,
+              210
+            ],
+            "width": 111,
+            "height": 149,
+            "bottom": 209,
+            "empty": false
+          },
+          {
+            "index": 2,
+            "alphaBounds": [
+              68,
+              146,
+              188,
+              210
+            ],
+            "width": 120,
+            "height": 64,
+            "bottom": 209,
+            "empty": false
+          }
+        ]
+      }
+    }
+  }
+}
