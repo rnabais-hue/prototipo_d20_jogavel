@@ -85,7 +85,29 @@ Ela é cálculo determinístico sobre dado, não orquestração.
 Chame a validação nos pontos onde o pack é resolvido, de modo que um pack inválido falhe de
 forma explícita e legível em vez de produzir `NaN` ou `undefined` silencioso.
 
-### 4. Contexto do compartimento
+### 4. Fechar a aresta `content -> combat`
+
+`src/content/combatPresets.ts` importa de `src/combat/combatWeaponRange.ts`:
+
+```ts
+import { getCombatWeaponRangeProfile, isCombatWeaponRangeBand, ... } from '../combat/combatWeaponRange';
+```
+
+Isso é um ciclo no nível de camada. A decisão 0047 e o `docs/ARCHITECTURE.md` dizem que
+`src/content/` é dado, sem lógica, e é folha na direção de dependência. A aresta é anterior à
+tarefa 01 — foi herdada, não introduzida — e está registrada na decisão 0050.
+
+Feche-a pelo mesmo princípio desta tarefa: o pack declara a faixa de alcance como **dado**
+(`rangeBand: string`), e a resolução do perfil de alcance acontece no motor, no momento em que
+a ficha é resolvida. O pack para de importar qualquer coisa do motor.
+
+Ao final, este comando deve retornar vazio:
+
+```
+grep -rn "^import" src/content/*.ts | grep -v "from './"
+```
+
+### 5. Contexto do compartimento
 
 Crie `src/content/CONTEXT.md`, no máximo 60 linhas, em inglês, seguindo a decisão 0049.
 Deve responder exatamente cinco perguntas:
