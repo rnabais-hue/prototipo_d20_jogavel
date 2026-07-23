@@ -1,7 +1,7 @@
 import type { CombatSession } from './combatSession';
 import { getCombatParticipantCell } from './combatPositioning';
 import { getManhattanDistance } from '../movement/moveRange';
-import type { CombatCliResolvedWeapon } from '../cli/combatCliPresets';
+import type { CombatResolvedWeapon } from '../content/combatPresets';
 import type { CombatWeaponRangeBand } from './combatWeaponRange';
 
 export type CombatAttackRangeValidation =
@@ -9,7 +9,7 @@ export type CombatAttackRangeValidation =
       ok: true;
       distance: number;
       maximumDistance: number;
-      weapon: CombatCliResolvedWeapon;
+      weapon: CombatResolvedWeapon;
     }
   | {
       ok: false;
@@ -34,7 +34,7 @@ export function validateCombatSessionAttackRange(
   input: {
     attackerId: string;
     targetId: string;
-    weapon: CombatCliResolvedWeapon;
+    weapon: CombatResolvedWeapon;
   },
 ): CombatAttackRangeValidation {
   const attackerCell = getCombatParticipantCell(session.positioning, input.attackerId);

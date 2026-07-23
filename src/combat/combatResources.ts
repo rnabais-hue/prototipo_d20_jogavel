@@ -1,6 +1,6 @@
-import type { CombatCliResolvedSheet } from './combatCliPresets';
+import type { CombatResolvedSheet } from '../content/combatPresets';
 
-export type CombatCliResourceState = {
+export type CombatResourceState = {
   participantId: string;
   id: string;
   label: string;
@@ -8,15 +8,15 @@ export type CombatCliResourceState = {
   maximum: number;
 };
 
-export type CombatCliResourceStateByParticipant = Readonly<
-  Record<string, readonly CombatCliResourceState[]>
+export type CombatResourceStateByParticipant = Readonly<
+  Record<string, readonly CombatResourceState[]>
 >;
 
-export type CombatCliSpendResourceResult =
+export type CombatSpendResourceResult =
   | {
       ok: true;
-      resources: CombatCliResourceStateByParticipant;
-      resource: CombatCliResourceState;
+      resources: CombatResourceStateByParticipant;
+      resource: CombatResourceState;
     }
   | {
       ok: false;
@@ -39,9 +39,9 @@ export type CombatCliSpendResourceResult =
           };
     };
 
-export function createCombatCliResourceState(
-  sheets: readonly CombatCliResolvedSheet[],
-): CombatCliResourceStateByParticipant {
+export function createCombatResourceState(
+  sheets: readonly CombatResolvedSheet[],
+): CombatResourceStateByParticipant {
   return Object.fromEntries(
     sheets.map((sheet) => [
       sheet.participantId,
@@ -56,21 +56,21 @@ export function createCombatCliResourceState(
   );
 }
 
-export function getCombatCliResource(
-  resources: CombatCliResourceStateByParticipant,
+export function getCombatResource(
+  resources: CombatResourceStateByParticipant,
   participantId: string,
   resourceId: string,
-): CombatCliResourceState | undefined {
+): CombatResourceState | undefined {
   return resources[participantId]?.find((resource) => resource.id === resourceId);
 }
 
-export function canSpendCombatCliResource(
-  resources: CombatCliResourceStateByParticipant,
+export function canSpendCombatResource(
+  resources: CombatResourceStateByParticipant,
   participantId: string,
   resourceId: string,
   cost: number,
 ): boolean {
-  const resource = getCombatCliResource(resources, participantId, resourceId);
+  const resource = getCombatResource(resources, participantId, resourceId);
 
   return (
     Number.isInteger(cost) &&
@@ -80,12 +80,12 @@ export function canSpendCombatCliResource(
   );
 }
 
-export function spendCombatCliResource(
-  resources: CombatCliResourceStateByParticipant,
+export function spendCombatResource(
+  resources: CombatResourceStateByParticipant,
   participantId: string,
   resourceId: string,
   cost: number,
-): CombatCliSpendResourceResult {
+): CombatSpendResourceResult {
   if (!Number.isInteger(cost) || cost < 0) {
     return {
       ok: false,
@@ -96,7 +96,7 @@ export function spendCombatCliResource(
     };
   }
 
-  const resource = getCombatCliResource(resources, participantId, resourceId);
+  const resource = getCombatResource(resources, participantId, resourceId);
   if (!resource) {
     return {
       ok: false,
@@ -121,7 +121,7 @@ export function spendCombatCliResource(
     };
   }
 
-  const nextResource: CombatCliResourceState = {
+  const nextResource: CombatResourceState = {
     ...resource,
     current: resource.current - cost,
   };

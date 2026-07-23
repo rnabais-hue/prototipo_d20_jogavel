@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { createMinimalCombatEncounterFixture } from '../rules/combatFixtures';
 import { endTurn } from '../rules/tacticalEncounter';
-import { COMBAT_CLI_ACTORS } from './combatCliPresets';
-import { getCombatCliEnemyScriptDecision } from './combatCliEnemyScript';
+import { COMBAT_ACTORS } from '../content/combatPresets';
+import { getEnemyScriptDecision } from './enemyScript';
 
-describe('getCombatCliEnemyScriptDecision', () => {
+describe('getEnemyScriptDecision', () => {
   it('does not run when the active participant is the player', () => {
     const fixture = createMinimalCombatEncounterFixture();
 
     expect(
-      getCombatCliEnemyScriptDecision(
+      getEnemyScriptDecision(
         fixture.encounter,
-        COMBAT_CLI_ACTORS.opponent.participantId,
+        COMBAT_ACTORS.opponent.participantId,
       ),
     ).toEqual({
       ok: false,
@@ -25,9 +25,9 @@ describe('getCombatCliEnemyScriptDecision', () => {
 
     expect(turn.ok).toBe(true);
     expect(
-      getCombatCliEnemyScriptDecision(
+      getEnemyScriptDecision(
         turn.ok ? turn.encounter : fixture.encounter,
-        COMBAT_CLI_ACTORS.opponent.participantId,
+        COMBAT_ACTORS.opponent.participantId,
       ),
     ).toEqual({
       ok: true,
@@ -43,9 +43,9 @@ describe('getCombatCliEnemyScriptDecision', () => {
     });
 
     expect(
-      getCombatCliEnemyScriptDecision(
+      getEnemyScriptDecision(
         fixture.encounter,
-        COMBAT_CLI_ACTORS.opponent.participantId,
+        COMBAT_ACTORS.opponent.participantId,
       ),
     ).toEqual({
       ok: false,

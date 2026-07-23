@@ -3,7 +3,7 @@ import { mapMovementToEvent, mapAttackToEvents } from './presentationEvents';
 import type { CombatSessionResolvedAttack, CombatSessionMovementResult } from '../../combat/combatSession';
 import type { GridCell } from '../../movement/grid';
 
-// Helper to create fully typed CombatCliResolvedSheet mocks
+// Helper to create fully typed CombatResolvedSheet mocks
 const createMockSheet = (id: string, name: string, team: string, hp: number) => ({
   participantId: id,
   displayName: name,

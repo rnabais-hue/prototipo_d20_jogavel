@@ -4,7 +4,7 @@ import {
   type TacticalEncounter,
 } from '../rules/tacticalEncounter';
 
-export type CombatCliEnemyScriptDecision =
+export type EnemyScriptDecision =
   | {
       ok: true;
     }
@@ -17,10 +17,10 @@ export type CombatCliEnemyScriptDecision =
         | 'enemy_defeated';
     };
 
-export function getCombatCliEnemyScriptDecision(
+export function getEnemyScriptDecision(
   encounter: TacticalEncounter,
   enemyParticipantId: string,
-): CombatCliEnemyScriptDecision {
+): EnemyScriptDecision {
   const outcome = getEncounterOutcome(encounter);
   if (outcome.status !== 'ongoing') {
     return {

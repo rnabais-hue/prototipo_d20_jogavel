@@ -16,7 +16,7 @@ import {
   resolveCombatSessionAction,
   runCombatSessionOpponentAction,
 } from './combatSession';
-import { getCombatCliResource } from '../cli/combatCliResources';
+import { getCombatResource } from './combatResources';
 import { createCombatPositioningState } from './combatPositioning';
 
 describe('createCombatSessionFromPresetId', () => {
@@ -130,7 +130,7 @@ describe('resolveCombatSessionPrimaryAbility', () => {
       },
     });
     expect(
-      getCombatCliResource(session.resources, 'player_actor', 'power')?.current,
+      getCombatResource(session.resources, 'player_actor', 'power')?.current,
     ).toBe(4);
     expect(getCombatSessionLife(session, 'test_opponent')?.current).toBe(2);
   });
@@ -629,12 +629,12 @@ describe('Milestone 8: Attack Range Enforcement integration tests', () => {
 
   it('out-of-range primary ability does not spend resources or consume main action', () => {
     const session = createCombatSessionFromPresetId('training-duel');
-    const startPower = getCombatCliResource(session.resources, 'player_actor', 'power')?.current;
+    const startPower = getCombatResource(session.resources, 'player_actor', 'power')?.current;
 
     const result = resolveCombatSessionPrimaryAbility(session, { roll: 15 });
     expect(result.ok).toBe(false);
 
-    expect(getCombatCliResource(session.resources, 'player_actor', 'power')?.current).toBe(startPower);
+    expect(getCombatResource(session.resources, 'player_actor', 'power')?.current).toBe(startPower);
     expect(session.encounter.activeTurn.mainActionAvailable).toBe(true);
   });
 

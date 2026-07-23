@@ -19,22 +19,22 @@ import {
   type CombatSessionResolvedAttack,
 } from '../combat/combatSession';
 import {
-  COMBAT_CLI_ENCOUNTER_PRESETS,
-  DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
-  getCombatCliEncounterPreset,
-  type CombatCliResolvedAbility,
-  type CombatCliResolvedSheet,
-} from './combatCliPresets';
+  COMBAT_ENCOUNTER_PRESETS,
+  DEFAULT_COMBAT_ENCOUNTER_ID,
+  getCombatEncounterPreset,
+  type CombatResolvedAbility,
+  type CombatResolvedSheet,
+} from '../content/combatPresets';
 import { formatCombatCliActionMenu } from './combatCliActions';
 import { createCombatCliDice } from './combatCliDice';
-import { getCombatCliEnemyScriptDecision } from './combatCliEnemyScript';
+import { getEnemyScriptDecision } from '../combat/enemyScript';
 import { formatCombatCliEvent, type CombatCliLogEvent } from './combatCliLog';
 import { formatCombatCliEndSummary, formatCombatCliOutcome } from './combatCliOutcome';
 import { parseCombatCliExplicitD20Roll } from './combatCliRollInput';
 import {
-  getCombatCliResource,
-  type CombatCliSpendResourceResult,
-} from './combatCliResources';
+  getCombatResource,
+  type CombatSpendResourceResult,
+} from '../combat/combatResources';
 
 type CombatCliSession = CombatSession & {
   running: boolean;
@@ -78,7 +78,7 @@ export async function runCombatCli(): Promise<void> {
 }
 
 function createCombatCliSession(
-  encounterId = DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
+  encounterId = DEFAULT_COMBAT_ENCOUNTER_ID,
 ): CombatCliSession {
   return {
     ...createCombatSessionFromPresetId(encounterId, {
@@ -141,7 +141,7 @@ function handleCommand(session: CombatCliSession, input: string): void {
 
 function handleRestart(session: CombatCliSession, encounterId?: string): void {
   const nextEncounterId = encounterId ?? session.preset.id;
-  const encounterPreset = getCombatCliEncounterPreset(nextEncounterId);
+  const encounterPreset = getCombatEncounterPreset(nextEncounterId);
   if (!encounterPreset) {
     writeLine(`Unknown encounter preset "${nextEncounterId}". Type "encounters" to list options.`);
     return;
@@ -217,7 +217,7 @@ function handleEnemy(session: CombatCliSession): void {
     return;
   }
 
-  const decision = getCombatCliEnemyScriptDecision(
+  const decision = getEnemyScriptDecision(
     session.encounter,
     opponent.participantId,
   );
@@ -379,7 +379,7 @@ function printHelp(): void {
 
 function printEncounters(session: CombatCliSession): void {
   writeLine('Encounter presets:');
-  for (const preset of COMBAT_CLI_ENCOUNTER_PRESETS) {
+  for (const preset of COMBAT_ENCOUNTER_PRESETS) {
     const marker = preset.id === session.preset.id ? '*' : ' ';
     writeLine(`${marker} ${preset.id} - ${preset.label}: ${preset.description}`);
   }
@@ -457,13 +457,13 @@ function printEvents(session: CombatCliSession, events: readonly CombatCliLogEve
 function getSheetByParticipantId(
   session: CombatCliSession,
   participantId: string,
-): CombatCliResolvedSheet {
+): CombatResolvedSheet {
   return getCombatSessionSheet(session, participantId);
 }
 
 function formatEnemyScriptDecision(
   reason: Extract<
-    ReturnType<typeof getCombatCliEnemyScriptDecision>,
+    ReturnType<typeof getEnemyScriptDecision>,
     { ok: false }
   >['reason'],
 ): string {
@@ -480,8 +480,8 @@ function formatEnemyScriptDecision(
 }
 
 function formatSpendError(
-  error: Exclude<CombatCliSpendResourceResult, { ok: true }>['error'],
-  ability: CombatCliResolvedAbility,
+  error: Exclude<CombatSpendResourceResult, { ok: true }>['error'],
+  ability: CombatResolvedAbility,
 ): string {
   switch (error.code) {
     case 'insufficient_resource':
@@ -495,10 +495,10 @@ function formatSpendError(
 
 function formatResources(
   session: CombatCliSession,
-  sheet: CombatCliResolvedSheet,
+  sheet: CombatResolvedSheet,
 ): string {
   const formattedResources = sheet.resources.map((resource) => {
-    const currentResource = getCombatCliResource(
+    const currentResource = getCombatResource(
       session.resources,
       sheet.participantId,
       resource.id,
@@ -514,11 +514,11 @@ function formatParticipant(session: CombatCliSession, participantId: string): st
   return getSheetByParticipantId(session, participantId).displayName;
 }
 
-function formatAttributes(attributes: CombatCliResolvedSheet['attributes']): string {
+function formatAttributes(attributes: CombatResolvedSheet['attributes']): string {
   return `STR ${attributes.strength}, DEX ${attributes.dexterity}, CON ${attributes.constitution}, INT ${attributes.intelligence}, WIS ${attributes.wisdom}, CHA ${attributes.charisma}`;
 }
 
-function formatPrimarySkill(sheet: CombatCliResolvedSheet): string {
+function formatPrimarySkill(sheet: CombatResolvedSheet): string {
   const action = getPrimaryCombatSessionAction(sheet);
   const skill = sheet.skills.find((entry) => entry.skillId === action.skillId);
   if (!skill) {

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { validateCombatSessionAttackRange } from './combatAttackRange';
 import { createCombatPositioningState } from './combatPositioning';
 import type { CombatSession } from './combatSession';
-import type { CombatCliResolvedWeapon } from '../cli/combatCliPresets';
+import type { CombatResolvedWeapon } from '../content/combatPresets';
 
 function createMockSession(positions: Record<string, { x: number; y: number }>): CombatSession {
   const placements = Object.entries(positions).map(([participantId, cell]) => ({
@@ -17,19 +17,19 @@ function createMockSession(positions: Record<string, { x: number; y: number }>):
   } as unknown as CombatSession;
 }
 
-const meleeWeapon: CombatCliResolvedWeapon = {
+const meleeWeapon: CombatResolvedWeapon = {
   weaponId: 'melee-w',
   label: 'Melee Weapon',
   rangeProfile: { band: 'melee', maximumDistance: 1 },
 };
 
-const shortWeapon: CombatCliResolvedWeapon = {
+const shortWeapon: CombatResolvedWeapon = {
   weaponId: 'short-w',
   label: 'Short Weapon',
   rangeProfile: { band: 'short', maximumDistance: 4 },
 };
 
-const longWeapon: CombatCliResolvedWeapon = {
+const longWeapon: CombatResolvedWeapon = {
   weaponId: 'long-w',
   label: 'Long Weapon',
   rangeProfile: { band: 'long', maximumDistance: 9 },

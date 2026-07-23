@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { COMBAT_CLI_RESOLVED_SHEETS } from './combatCliPresets';
-import { createCombatCliResourceState, spendCombatCliResource } from './combatCliResources';
+import { COMBAT_RESOLVED_SHEETS } from '../content/combatPresets';
+import { createCombatResourceState, spendCombatResource } from '../combat/combatResources';
 import { formatCombatCliActionMenu } from './combatCliActions';
 
 describe('formatCombatCliActionMenu', () => {
   it('shows the player basic action, ability, PM availability, and manual roll examples', () => {
-    const [player] = COMBAT_CLI_RESOLVED_SHEETS;
-    const resources = createCombatCliResourceState(COMBAT_CLI_RESOLVED_SHEETS);
+    const [player] = COMBAT_RESOLVED_SHEETS;
+    const resources = createCombatResourceState(COMBAT_RESOLVED_SHEETS);
 
     expect(formatCombatCliActionMenu({ sheet: player, resources })).toEqual([
       'Actions for Training Vanguard:',
@@ -20,9 +20,9 @@ describe('formatCombatCliActionMenu', () => {
   });
 
   it('uses live resources when PM has changed', () => {
-    const [player] = COMBAT_CLI_RESOLVED_SHEETS;
-    const spent = spendCombatCliResource(
-      createCombatCliResourceState(COMBAT_CLI_RESOLVED_SHEETS),
+    const [player] = COMBAT_RESOLVED_SHEETS;
+    const spent = spendCombatResource(
+      createCombatResourceState(COMBAT_RESOLVED_SHEETS),
       player.participantId,
       'power',
       2,
@@ -39,7 +39,7 @@ describe('formatCombatCliActionMenu', () => {
   });
 
   it('shows that an actor without abilities cannot use ability', () => {
-    const [, opponent] = COMBAT_CLI_RESOLVED_SHEETS;
+    const [, opponent] = COMBAT_RESOLVED_SHEETS;
 
     expect(formatCombatCliActionMenu({ sheet: opponent })).toContain(
       '  ability [roll] - no ability available for this actor.',

@@ -10,22 +10,22 @@ import {
   type EndTurnError,
   type TacticalEncounter,
 } from '../rules/tacticalEncounter';
-import { getCombatCliEnemyScriptDecision } from '../cli/combatCliEnemyScript';
+import { getEnemyScriptDecision } from './enemyScript';
 import {
-  DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
-  getCombatCliEncounterPreset,
-  resolveCombatCliEncounterPreset,
-  type CombatCliResolvedAbility,
-  type CombatCliResolvedAction,
-  type CombatCliResolvedEncounterPreset,
-  type CombatCliResolvedSheet,
-} from '../cli/combatCliPresets';
+  DEFAULT_COMBAT_ENCOUNTER_ID,
+  getCombatEncounterPreset,
+  resolveCombatEncounterPreset,
+  type CombatResolvedAbility,
+  type CombatResolvedAction,
+  type CombatResolvedEncounterPreset,
+  type CombatResolvedSheet,
+} from '../content/combatPresets';
 import {
-  createCombatCliResourceState,
-  spendCombatCliResource,
-  type CombatCliResourceStateByParticipant,
-  type CombatCliSpendResourceResult,
-} from '../cli/combatCliResources';
+  createCombatResourceState,
+  spendCombatResource,
+  type CombatResourceStateByParticipant,
+  type CombatSpendResourceResult,
+} from './combatResources';
 import type { GridCell } from '../movement/grid';
 import {
   createCombatPositioningState,
@@ -50,9 +50,9 @@ export type CombatSessionRoller = {
 };
 
 export type CombatSession = {
-  preset: CombatCliResolvedEncounterPreset;
+  preset: CombatResolvedEncounterPreset;
   encounter: TacticalEncounter;
-  resources: CombatCliResourceStateByParticipant;
+  resources: CombatResourceStateByParticipant;
   positioning: CombatPositioningState;
   movementAllowance: CombatSessionMovementAllowance;
   roller?: CombatSessionRoller;
@@ -111,16 +111,16 @@ export type CombatSessionAttackEvent =
   | EncounterEvent;
 
 export type CombatSessionActionContext = {
-  attacker: CombatCliResolvedSheet;
-  target: CombatCliResolvedSheet;
+  attacker: CombatResolvedSheet;
+  target: CombatResolvedSheet;
 };
 
 export type CombatSessionResolvedAttack = {
   ok: true;
-  attacker: CombatCliResolvedSheet;
-  target: CombatCliResolvedSheet;
-  action: CombatCliResolvedAction;
-  ability?: CombatCliResolvedAbility;
+  attacker: CombatResolvedSheet;
+  target: CombatResolvedSheet;
+  action: CombatResolvedAction;
+  ability?: CombatResolvedAbility;
   roll: number;
   events: readonly CombatSessionAttackEvent[];
   result: Exclude<ReturnType<typeof resolveBasicAttackWithDamage>, { ok: false }>['result'];
@@ -180,14 +180,14 @@ export type CombatSessionAbilityError =
     }
   | {
       code: 'resource_spend_failed';
-      error: Exclude<CombatCliSpendResourceResult, { ok: true }>['error'];
-      ability: CombatCliResolvedAbility;
+      error: Exclude<CombatSpendResourceResult, { ok: true }>['error'];
+      ability: CombatResolvedAbility;
     };
 
 export type CombatSessionAbilityResult =
   | (CombatSessionResolvedAttack & {
-      ability: CombatCliResolvedAbility;
-      spentResource: Exclude<CombatCliSpendResourceResult, { ok: false }>['resource'];
+      ability: CombatResolvedAbility;
+      spentResource: Exclude<CombatSpendResourceResult, { ok: false }>['resource'];
     })
   | {
       ok: false;
@@ -221,7 +221,7 @@ export type CombatSessionOpponentActionResult =
         | {
             code: 'opponent_script_unavailable';
             reason: Exclude<
-              ReturnType<typeof getCombatCliEnemyScriptDecision>,
+              ReturnType<typeof getEnemyScriptDecision>,
               { ok: true }
             >['reason'];
           }
@@ -233,23 +233,23 @@ export type CombatSessionOpponentActionResult =
     };
 
 export type CombatSessionAvailableActions = {
-  sheet: CombatCliResolvedSheet;
-  actions: readonly CombatCliResolvedAction[];
-  abilities: readonly CombatCliResolvedAbility[];
+  sheet: CombatResolvedSheet;
+  actions: readonly CombatResolvedAction[];
+  abilities: readonly CombatResolvedAbility[];
 };
 
 export function createCombatSessionFromPresetId(
-  encounterId = DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
+  encounterId = DEFAULT_COMBAT_ENCOUNTER_ID,
   options: {
     roller?: CombatSessionRoller;
   } = {},
 ): CombatSession {
-  const encounterPreset = getCombatCliEncounterPreset(encounterId);
+  const encounterPreset = getCombatEncounterPreset(encounterId);
   if (!encounterPreset) {
     throw new Error(`Unknown combat encounter preset: ${encounterId}`);
   }
 
-  const preset = resolveCombatCliEncounterPreset(encounterPreset);
+  const preset = resolveCombatEncounterPreset(encounterPreset);
   const [player, opponent] = preset.sheets;
   if (!player || !opponent) {
     throw new Error('Combat session requires two resolved sheets.');
@@ -278,7 +278,7 @@ export function createCombatSessionFromPresetId(
   return {
     preset,
     encounter,
-    resources: createCombatCliResourceState(preset.sheets),
+    resources: createCombatResourceState(preset.sheets),
     positioning: createCombatPositioningState({
       bounds: COMBAT_SESSION_DEBUG_GRID_BOUNDS,
       placements: [
@@ -435,7 +435,7 @@ export function moveCombatSessionActiveParticipant(
 
 export function getCombatSessionActiveSheet(
   session: CombatSession,
-): CombatCliResolvedSheet | undefined {
+): CombatResolvedSheet | undefined {
   const active = getCombatSessionActiveParticipant(session);
 
   return active ? getCombatSessionSheet(session, active.id) : undefined;
@@ -459,7 +459,7 @@ export function getCombatSessionAvailableActions(
 export function getCombatSessionSheet(
   session: CombatSession,
   participantId: string,
-): CombatCliResolvedSheet {
+): CombatResolvedSheet {
   const sheet = session.preset.sheets.find(
     (entry) => entry.participantId === participantId,
   );
@@ -559,7 +559,7 @@ export function resolveCombatSessionPrimaryAbility(
     };
   }
 
-  const spend = spendCombatCliResource(
+  const spend = spendCombatResource(
     session.resources,
     context.attacker.participantId,
     ability.cost.resourceId,
@@ -643,7 +643,7 @@ export function runCombatSessionOpponentAction(
     };
   }
 
-  const decision = getCombatCliEnemyScriptDecision(
+  const decision = getEnemyScriptDecision(
     session.encounter,
     opponent.participantId,
   );
@@ -696,14 +696,14 @@ export function runCombatSessionOpponentAction(
 }
 
 export function getPrimaryCombatSessionAbility(
-  sheet: CombatCliResolvedSheet,
-): CombatCliResolvedAbility | undefined {
+  sheet: CombatResolvedSheet,
+): CombatResolvedAbility | undefined {
   return sheet.abilities[0];
 }
 
 export function getPrimaryCombatSessionAction(
-  sheet: CombatCliResolvedSheet,
-): CombatCliResolvedAction {
+  sheet: CombatResolvedSheet,
+): CombatResolvedAction {
   const action = sheet.actions.find((entry) => entry.kind === 'main');
   if (!action) {
     throw new Error(`Missing combat main action for participant ${sheet.participantId}`);
@@ -714,8 +714,8 @@ export function getPrimaryCombatSessionAction(
 
 export function getCombatSessionTargetSheet(
   session: CombatSession,
-  attacker: CombatCliResolvedSheet,
-): CombatCliResolvedSheet {
+  attacker: CombatResolvedSheet,
+): CombatResolvedSheet {
   const target = session.preset.sheets.find(
     (entry) => entry.teamId !== attacker.teamId,
   );
@@ -772,8 +772,8 @@ function getCombatSessionActionContext(
 function resolveCombatSessionAttackWithAction(
   session: CombatSession,
   input: CombatSessionActionContext & {
-    action: CombatCliResolvedAction;
-    ability?: CombatCliResolvedAbility;
+    action: CombatResolvedAction;
+    ability?: CombatResolvedAbility;
     roll?: number;
     roller?: CombatSessionRoller;
   },

@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  COMBAT_CLI_ACTORS,
-  COMBAT_CLI_ENCOUNTER_PRESETS,
-  DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
-  getCombatCliEncounterPreset,
-  resolveCombatCliEncounterPreset,
-  resolveCombatCliSheets,
-} from './combatCliPresets';
+  COMBAT_ACTORS,
+  COMBAT_ENCOUNTER_PRESETS,
+  DEFAULT_COMBAT_ENCOUNTER_ID,
+  getCombatEncounterPreset,
+  resolveCombatEncounterPreset,
+  resolveCombatSheets,
+} from './combatPresets';
 
-describe('resolveCombatCliSheets', () => {
+describe('resolveCombatSheets', () => {
   it('resolves melee from attribute, half level, and trained bonus', () => {
-    const [player] = resolveCombatCliSheets([COMBAT_CLI_ACTORS.player]);
+    const [player] = resolveCombatSheets([COMBAT_ACTORS.player]);
 
     expect(player?.level).toBe(1);
     expect(player?.halfLevel).toBe(0);
@@ -35,7 +35,7 @@ describe('resolveCombatCliSheets', () => {
   });
 
   it('resolves the player ability from CLI-side resource and action data', () => {
-    const [player] = resolveCombatCliSheets([COMBAT_CLI_ACTORS.player]);
+    const [player] = resolveCombatSheets([COMBAT_ACTORS.player]);
     const ability = player?.abilities[0];
 
     expect(ability).toMatchObject({
@@ -61,9 +61,9 @@ describe('resolveCombatCliSheets', () => {
   });
 
   it('resolves the opponent action through its configured weapon', () => {
-    const [, opponent] = resolveCombatCliSheets([
-      COMBAT_CLI_ACTORS.player,
-      COMBAT_CLI_ACTORS.opponent,
+    const [, opponent] = resolveCombatSheets([
+      COMBAT_ACTORS.player,
+      COMBAT_ACTORS.opponent,
     ]);
     expect(opponent?.actions[0]?.weapon).toMatchObject({
       weaponId: 'practice-crossbow',
@@ -73,38 +73,38 @@ describe('resolveCombatCliSheets', () => {
 
   it('rejects an action referencing an unknown weapon', () => {
     const actor = {
-      ...COMBAT_CLI_ACTORS.player,
+      ...COMBAT_ACTORS.player,
       sheet: {
-        ...COMBAT_CLI_ACTORS.player.sheet,
-        actions: [{ ...COMBAT_CLI_ACTORS.player.sheet.actions[0], weaponId: 'missing' }],
+        ...COMBAT_ACTORS.player.sheet,
+        actions: [{ ...COMBAT_ACTORS.player.sheet.actions[0], weaponId: 'missing' }],
       },
     };
-    expect(() => resolveCombatCliSheets([actor])).toThrowError(
+    expect(() => resolveCombatSheets([actor])).toThrowError(
       'Missing CLI resolved weapon missing for action basic_strike',
     );
   });
 
   it('rejects an ability action referencing an unknown weapon', () => {
-    const ability = COMBAT_CLI_ACTORS.player.sheet.abilities[0];
+    const ability = COMBAT_ACTORS.player.sheet.abilities[0];
     const actor = {
-      ...COMBAT_CLI_ACTORS.player,
+      ...COMBAT_ACTORS.player,
       sheet: {
-        ...COMBAT_CLI_ACTORS.player.sheet,
+        ...COMBAT_ACTORS.player.sheet,
         abilities: [{ ...ability, action: { ...ability.action, weaponId: 'missing' } }],
       },
     };
-    expect(() => resolveCombatCliSheets([actor])).toThrowError(
+    expect(() => resolveCombatSheets([actor])).toThrowError(
       'Missing CLI resolved weapon missing for action basic_strike',
     );
   });
 
   it('rejects duplicate weapon ids', () => {
-    const weapon = COMBAT_CLI_ACTORS.player.sheet.weapons[0];
+    const weapon = COMBAT_ACTORS.player.sheet.weapons[0];
     const actor = {
-      ...COMBAT_CLI_ACTORS.player,
-      sheet: { ...COMBAT_CLI_ACTORS.player.sheet, weapons: [weapon, weapon] },
+      ...COMBAT_ACTORS.player,
+      sheet: { ...COMBAT_ACTORS.player.sheet, weapons: [weapon, weapon] },
     };
-    expect(() => resolveCombatCliSheets([actor])).toThrowError(
+    expect(() => resolveCombatSheets([actor])).toThrowError(
       'Duplicate CLI weapon id: practice-blade',
     );
   });
@@ -112,7 +112,7 @@ describe('resolveCombatCliSheets', () => {
 
 describe('combat CLI encounter presets', () => {
   it('keeps the original training duel as the default encounter', () => {
-    const preset = getCombatCliEncounterPreset(DEFAULT_COMBAT_CLI_ENCOUNTER_ID);
+    const preset = getCombatEncounterPreset(DEFAULT_COMBAT_ENCOUNTER_ID);
 
     expect(preset).toMatchObject({
       id: 'training-duel',
@@ -125,7 +125,7 @@ describe('combat CLI encounter presets', () => {
   });
 
   it('lists a second encounter preset for short combat checks', () => {
-    expect(COMBAT_CLI_ENCOUNTER_PRESETS.map((preset) => preset.id)).toEqual([
+    expect(COMBAT_ENCOUNTER_PRESETS.map((preset) => preset.id)).toEqual([
       'training-duel',
       'quick-check',
       'challenging-duel',
@@ -133,14 +133,14 @@ describe('combat CLI encounter presets', () => {
   });
 
   it('resolves quick-check with a weaker opponent without changing the player sheet', () => {
-    const quickCheck = getCombatCliEncounterPreset('quick-check');
+    const quickCheck = getCombatEncounterPreset('quick-check');
 
     expect(quickCheck).toBeDefined();
     if (!quickCheck) {
       return;
     }
 
-    const resolved = resolveCombatCliEncounterPreset(quickCheck);
+    const resolved = resolveCombatEncounterPreset(quickCheck);
     const [player, opponent] = resolved.sheets;
 
     expect(player?.displayName).toBe('Training Vanguard');
@@ -163,6 +163,6 @@ describe('combat CLI encounter presets', () => {
   });
 
   it('returns undefined for unknown encounter preset ids', () => {
-    expect(getCombatCliEncounterPreset('missing')).toBeUndefined();
+    expect(getCombatEncounterPreset('missing')).toBeUndefined();
   });
 });

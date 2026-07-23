@@ -1,9 +1,9 @@
-﻿import type { CombatCliResolvedSheet } from './combatCliPresets';
-import { getCombatCliResource, type CombatCliResourceStateByParticipant } from './combatCliResources';
+import type { CombatResolvedSheet } from '../content/combatPresets';
+import { getCombatResource, type CombatResourceStateByParticipant } from '../combat/combatResources';
 
 export type CombatCliActionMenuInput = {
-  sheet: CombatCliResolvedSheet;
-  resources?: CombatCliResourceStateByParticipant;
+  sheet: CombatResolvedSheet;
+  resources?: CombatResourceStateByParticipant;
 };
 
 export function formatCombatCliActionMenu(input: CombatCliActionMenuInput): readonly string[] {
@@ -34,13 +34,13 @@ export function formatCombatCliActionMenu(input: CombatCliActionMenuInput): read
 }
 
 function formatResourceText(
-  sheet: CombatCliResolvedSheet,
+  sheet: CombatResolvedSheet,
   resourceId: string,
-  resources: CombatCliResourceStateByParticipant | undefined,
+  resources: CombatResourceStateByParticipant | undefined,
 ): string {
   const presetResource = sheet.resources.find((entry) => entry.id === resourceId);
   const liveResource = resources
-    ? getCombatCliResource(resources, sheet.participantId, resourceId)
+    ? getCombatResource(resources, sheet.participantId, resourceId)
     : undefined;
   const resource = liveResource ?? presetResource;
 

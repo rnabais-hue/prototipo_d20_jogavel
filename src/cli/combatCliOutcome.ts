@@ -1,9 +1,9 @@
-﻿import type { EncounterOutcome } from '../rules/tacticalEncounter';
-import type { CombatCliResolvedSheet } from './combatCliPresets';
+import type { EncounterOutcome } from '../rules/tacticalEncounter';
+import type { CombatResolvedSheet } from '../content/combatPresets';
 
 export function formatCombatCliOutcome(
   outcome: EncounterOutcome,
-  sheets: readonly CombatCliResolvedSheet[],
+  sheets: readonly CombatResolvedSheet[],
 ): string {
   switch (outcome.status) {
     case 'ongoing':
@@ -17,7 +17,7 @@ export function formatCombatCliOutcome(
 
 export function formatCombatCliEndSummary(
   outcome: EncounterOutcome,
-  sheets: readonly CombatCliResolvedSheet[],
+  sheets: readonly CombatResolvedSheet[],
 ): string | undefined {
   switch (outcome.status) {
     case 'ongoing':
@@ -29,7 +29,7 @@ export function formatCombatCliEndSummary(
   }
 }
 
-function formatTeam(teamId: string, sheets: readonly CombatCliResolvedSheet[]): string {
+function formatTeam(teamId: string, sheets: readonly CombatResolvedSheet[]): string {
   const teamMembers = sheets
     .filter((sheet) => sheet.teamId === teamId)
     .map((sheet) => sheet.displayName);

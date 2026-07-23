@@ -1,28 +1,28 @@
 import { COMBAT_FIXTURE_IDS } from '../rules/combatFixtures';
 import { getCombatWeaponRangeProfile, isCombatWeaponRangeBand, type CombatWeaponRangeBand, type CombatWeaponRangeProfile } from '../combat/combatWeaponRange';
 
-export type CombatCliActorPreset = {
+export type CombatActorPreset = {
   participantId: string;
   displayName: string;
   teamId: string;
-  sheet: CombatCliSheetPreset;
+  sheet: CombatSheetPreset;
 };
 
-export type CombatCliEncounterPreset = {
+export type CombatEncounterPreset = {
   id: string;
   label: string;
   description: string;
-  participants: readonly CombatCliActorPreset[];
+  participants: readonly CombatActorPreset[];
 };
 
-export type CombatCliResolvedEncounterPreset = {
+export type CombatResolvedEncounterPreset = {
   id: string;
   label: string;
   description: string;
-  sheets: readonly CombatCliResolvedSheet[];
+  sheets: readonly CombatResolvedSheet[];
 };
 
-export type CombatCliAttributeKey =
+export type CombatAttributeKey =
   | 'strength'
   | 'dexterity'
   | 'constitution'
@@ -30,123 +30,123 @@ export type CombatCliAttributeKey =
   | 'wisdom'
   | 'charisma';
 
-export type CombatCliAttributeSet = Record<CombatCliAttributeKey, number>;
+export type CombatAttributeSet = Record<CombatAttributeKey, number>;
 
-export type CombatCliSkillId = 'melee';
+export type CombatSkillId = 'melee';
 
-export type CombatCliSkillDefinition = {
-  id: CombatCliSkillId;
+export type CombatSkillDefinition = {
+  id: CombatSkillId;
   displayName: string;
-  attributeKey: CombatCliAttributeKey;
+  attributeKey: CombatAttributeKey;
 };
 
-export type CombatCliSkillTrainingPreset = {
-  skillId: CombatCliSkillId;
+export type CombatSkillTrainingPreset = {
+  skillId: CombatSkillId;
   trained: boolean;
 };
 
-export type CombatCliResourcePreset = {
+export type CombatResourcePreset = {
   id: string;
   label: string;
   maximum: number;
 };
 
-export type CombatCliSheetPreset = {
+export type CombatSheetPreset = {
   level: number;
-  attributes: CombatCliAttributeSet;
+  attributes: CombatAttributeSet;
   life: {
     maximum: number;
   };
-  resources: readonly CombatCliResourcePreset[];
+  resources: readonly CombatResourcePreset[];
   defense: {
     label: string;
     base: number;
-    attributeKey: CombatCliAttributeKey;
+    attributeKey: CombatAttributeKey;
   };
-  skills: readonly CombatCliSkillTrainingPreset[];
-  weapons: readonly CombatCliWeaponPreset[];
-  actions: readonly CombatCliActionPreset[];
-  abilities: readonly CombatCliAbilityPreset[];
+  skills: readonly CombatSkillTrainingPreset[];
+  weapons: readonly CombatWeaponPreset[];
+  actions: readonly CombatActionPreset[];
+  abilities: readonly CombatAbilityPreset[];
 };
 
-export type CombatCliActionPreset = {
+export type CombatActionPreset = {
   actionId: string;
   label: string;
   kind: 'main';
   weaponId: string;
   check: {
-    skillId: CombatCliSkillId;
+    skillId: CombatSkillId;
   };
   damage: {
     base: number;
-    attributeKey: CombatCliAttributeKey;
+    attributeKey: CombatAttributeKey;
   };
 };
 
-export type CombatCliWeaponPreset = { weaponId: string; label: string; rangeBand: CombatWeaponRangeBand };
+export type CombatWeaponPreset = { weaponId: string; label: string; rangeBand: CombatWeaponRangeBand };
 
-export type CombatCliAbilityPreset = {
+export type CombatAbilityPreset = {
   abilityId: string;
   label: string;
   cost: {
     resourceId: string;
     amount: number;
   };
-  action: CombatCliActionPreset;
+  action: CombatActionPreset;
 };
 
-export type CombatCliResolvedSheet = {
+export type CombatResolvedSheet = {
   participantId: string;
   displayName: string;
   teamId: string;
   level: number;
   halfLevel: number;
-  attributes: CombatCliAttributeSet;
+  attributes: CombatAttributeSet;
   life: {
     maximum: number;
   };
-  resources: readonly CombatCliResolvedResource[];
+  resources: readonly CombatResolvedResource[];
   defense: {
     label: string;
     value: number;
   };
-  skills: readonly CombatCliResolvedSkill[];
-  weapons: readonly CombatCliResolvedWeapon[];
-  actions: readonly CombatCliResolvedAction[];
-  abilities: readonly CombatCliResolvedAbility[];
+  skills: readonly CombatResolvedSkill[];
+  weapons: readonly CombatResolvedWeapon[];
+  actions: readonly CombatResolvedAction[];
+  abilities: readonly CombatResolvedAbility[];
 };
 
-export type CombatCliResolvedResource = {
+export type CombatResolvedResource = {
   id: string;
   label: string;
   current: number;
   maximum: number;
 };
 
-export type CombatCliResolvedSkill = {
-  skillId: CombatCliSkillId;
+export type CombatResolvedSkill = {
+  skillId: CombatSkillId;
   displayName: string;
-  attributeKey: CombatCliAttributeKey;
+  attributeKey: CombatAttributeKey;
   attributeModifier: number;
   halfLevel: number;
   trainingBonus: number;
   totalModifier: number;
 };
 
-export type CombatCliResolvedAction = {
+export type CombatResolvedAction = {
   actionId: string;
   label: string;
   kind: 'main';
-  weapon: CombatCliResolvedWeapon;
-  skillId: CombatCliSkillId;
+  weapon: CombatResolvedWeapon;
+  skillId: CombatSkillId;
   skillDisplayName: string;
   checkModifier: number;
   damageBase: number;
 };
 
-export type CombatCliResolvedWeapon = { weaponId: string; label: string; rangeProfile: CombatWeaponRangeProfile };
+export type CombatResolvedWeapon = { weaponId: string; label: string; rangeProfile: CombatWeaponRangeProfile };
 
-export type CombatCliResolvedAbility = {
+export type CombatResolvedAbility = {
   abilityId: string;
   label: string;
   cost: {
@@ -154,20 +154,20 @@ export type CombatCliResolvedAbility = {
     resourceLabel: string;
     amount: number;
   };
-  action: CombatCliResolvedAction;
+  action: CombatResolvedAction;
 };
 
-export const COMBAT_CLI_SKILL_DEFINITIONS = [
+export const COMBAT_SKILL_DEFINITIONS = [
   {
     id: 'melee',
     displayName: 'Luta',
     attributeKey: 'strength',
   },
-] as const satisfies readonly CombatCliSkillDefinition[];
+] as const satisfies readonly CombatSkillDefinition[];
 
 const TRAINED_SKILL_BONUS = 2;
 
-export const COMBAT_CLI_ACTORS = {
+export const COMBAT_ACTORS = {
   player: {
     participantId: COMBAT_FIXTURE_IDS.player,
     displayName: 'Training Vanguard',
@@ -436,69 +436,69 @@ export const COMBAT_CLI_ACTORS = {
       abilities: [],
     },
   },
-} as const satisfies Record<string, CombatCliActorPreset>;
+} as const satisfies Record<string, CombatActorPreset>;
 
-export const COMBAT_CLI_PARTICIPANTS = [
-  COMBAT_CLI_ACTORS.player,
-  COMBAT_CLI_ACTORS.opponent,
+export const COMBAT_PARTICIPANTS = [
+  COMBAT_ACTORS.player,
+  COMBAT_ACTORS.opponent,
 ] as const;
 
-export const DEFAULT_COMBAT_CLI_ENCOUNTER_ID = 'training-duel';
+export const DEFAULT_COMBAT_ENCOUNTER_ID = 'training-duel';
 
-export const COMBAT_CLI_ENCOUNTER_PRESETS = [
+export const COMBAT_ENCOUNTER_PRESETS = [
   {
-    id: DEFAULT_COMBAT_CLI_ENCOUNTER_ID,
+    id: DEFAULT_COMBAT_ENCOUNTER_ID,
     label: 'Training Duel',
     description: 'Baseline 1v1 harness encounter.',
-    participants: COMBAT_CLI_PARTICIPANTS,
+    participants: COMBAT_PARTICIPANTS,
   },
   {
     id: 'quick-check',
     label: 'Quick Check',
     description: 'Shorter 1v1 encounter for fast hit, damage, and victory checks.',
-    participants: [COMBAT_CLI_ACTORS.player, COMBAT_CLI_ACTORS.bruisedOpponent],
+    participants: [COMBAT_ACTORS.player, COMBAT_ACTORS.bruisedOpponent],
   },
   {
     id: 'challenging-duel',
     label: 'Challenging Duel',
     description: 'Challenging 1v1 encounter for testing turn flows and multi-round combat.',
-    participants: [COMBAT_CLI_ACTORS.player, COMBAT_CLI_ACTORS.opponentHero],
+    participants: [COMBAT_ACTORS.player, COMBAT_ACTORS.opponentHero],
   },
-] as const satisfies readonly CombatCliEncounterPreset[];
+] as const satisfies readonly CombatEncounterPreset[];
 
-export const COMBAT_CLI_RESOLVED_SHEETS = resolveCombatCliSheets(
-  COMBAT_CLI_PARTICIPANTS,
+export const COMBAT_RESOLVED_SHEETS = resolveCombatSheets(
+  COMBAT_PARTICIPANTS,
 );
 
-export function getCombatCliEncounterPreset(
+export function getCombatEncounterPreset(
   encounterId: string,
-): CombatCliEncounterPreset | undefined {
-  return COMBAT_CLI_ENCOUNTER_PRESETS.find((preset) => preset.id === encounterId);
+): CombatEncounterPreset | undefined {
+  return COMBAT_ENCOUNTER_PRESETS.find((preset) => preset.id === encounterId);
 }
 
-export function resolveCombatCliEncounterPreset(
-  preset: CombatCliEncounterPreset,
-): CombatCliResolvedEncounterPreset {
+export function resolveCombatEncounterPreset(
+  preset: CombatEncounterPreset,
+): CombatResolvedEncounterPreset {
   return {
     id: preset.id,
     label: preset.label,
     description: preset.description,
-    sheets: resolveCombatCliSheets(preset.participants),
+    sheets: resolveCombatSheets(preset.participants),
   };
 }
 
-export function resolveCombatCliSheets(
-  presets: readonly CombatCliActorPreset[],
-): readonly CombatCliResolvedSheet[] {
-  return presets.map(resolveCombatCliSheet);
+export function resolveCombatSheets(
+  presets: readonly CombatActorPreset[],
+): readonly CombatResolvedSheet[] {
+  return presets.map(resolveCombatSheet);
 }
 
-function resolveCombatCliSheet(preset: CombatCliActorPreset): CombatCliResolvedSheet {
+function resolveCombatSheet(preset: CombatActorPreset): CombatResolvedSheet {
   const halfLevel = Math.floor(preset.sheet.level / 2);
   const skills = preset.sheet.skills.map((skill) =>
-    resolveCombatCliSkill(preset.sheet, skill, halfLevel),
+    resolveCombatSkill(preset.sheet, skill, halfLevel),
   );
-  const weapons = resolveCombatCliWeapons(preset.sheet.weapons);
+  const weapons = resolveCombatWeapons(preset.sheet.weapons);
 
   return {
     participantId: preset.participantId,
@@ -510,7 +510,7 @@ function resolveCombatCliSheet(preset: CombatCliActorPreset): CombatCliResolvedS
     life: {
       maximum: preset.sheet.life.maximum,
     },
-    resources: preset.sheet.resources.map(resolveCombatCliResource),
+    resources: preset.sheet.resources.map(resolveCombatResource),
     defense: {
       label: preset.sheet.defense.label,
       value:
@@ -522,20 +522,20 @@ function resolveCombatCliSheet(preset: CombatCliActorPreset): CombatCliResolvedS
     actions: preset.sheet.actions.map((action) => {
       const skill = getResolvedSkill(skills, action.check.skillId);
 
-      return resolveCombatCliAction(preset.sheet, action, skill, weapons);
+      return resolveCombatAction(preset.sheet, action, skill, weapons);
     }),
     abilities: preset.sheet.abilities.map((ability) =>
-      resolveCombatCliAbility(preset.sheet, ability, skills, weapons),
+      resolveCombatAbility(preset.sheet, ability, skills, weapons),
     ),
   };
 }
 
-function resolveCombatCliAction(
-  sheet: CombatCliSheetPreset,
-  action: CombatCliActionPreset,
-  skill: CombatCliResolvedSkill,
-  weapons: readonly CombatCliResolvedWeapon[],
-): CombatCliResolvedAction {
+function resolveCombatAction(
+  sheet: CombatSheetPreset,
+  action: CombatActionPreset,
+  skill: CombatResolvedSkill,
+  weapons: readonly CombatResolvedWeapon[],
+): CombatResolvedAction {
   const weapon = getResolvedWeapon(weapons, action.weaponId, `action ${action.actionId}`);
   return {
     actionId: action.actionId,
@@ -549,12 +549,12 @@ function resolveCombatCliAction(
   };
 }
 
-function resolveCombatCliAbility(
-  sheet: CombatCliSheetPreset,
-  ability: CombatCliAbilityPreset,
-  skills: readonly CombatCliResolvedSkill[],
-  weapons: readonly CombatCliResolvedWeapon[],
-): CombatCliResolvedAbility {
+function resolveCombatAbility(
+  sheet: CombatSheetPreset,
+  ability: CombatAbilityPreset,
+  skills: readonly CombatResolvedSkill[],
+  weapons: readonly CombatResolvedWeapon[],
+): CombatResolvedAbility {
   const resource = sheet.resources.find(
     (entry) => entry.id === ability.cost.resourceId,
   );
@@ -580,11 +580,11 @@ function resolveCombatCliAbility(
       resourceLabel: resource.label,
       amount: ability.cost.amount,
     },
-    action: resolveCombatCliAction(sheet, ability.action, skill, weapons),
+    action: resolveCombatAction(sheet, ability.action, skill, weapons),
   };
 }
 
-function resolveCombatCliWeapons(weapons: readonly CombatCliWeaponPreset[]): readonly CombatCliResolvedWeapon[] {
+function resolveCombatWeapons(weapons: readonly CombatWeaponPreset[]): readonly CombatResolvedWeapon[] {
   const seen = new Set<string>();
   return weapons.map((weapon) => {
     if (seen.has(weapon.weaponId)) throw new Error(`Duplicate CLI weapon id: ${weapon.weaponId}`);
@@ -596,15 +596,15 @@ function resolveCombatCliWeapons(weapons: readonly CombatCliWeaponPreset[]): rea
   });
 }
 
-function getResolvedWeapon(weapons: readonly CombatCliResolvedWeapon[], weaponId: string, owner: string): CombatCliResolvedWeapon {
+function getResolvedWeapon(weapons: readonly CombatResolvedWeapon[], weaponId: string, owner: string): CombatResolvedWeapon {
   const weapon = weapons.find((entry) => entry.weaponId === weaponId);
   if (!weapon) throw new Error(`Missing CLI resolved weapon ${weaponId} for ${owner}`);
   return weapon;
 }
 
-function resolveCombatCliResource(
-  resource: CombatCliResourcePreset,
-): CombatCliResolvedResource {
+function resolveCombatResource(
+  resource: CombatResourcePreset,
+): CombatResolvedResource {
   if (!Number.isInteger(resource.maximum) || resource.maximum < 0) {
     throw new Error(
       `Invalid CLI resource maximum for ${resource.id}: ${resource.maximum}`,
@@ -619,11 +619,11 @@ function resolveCombatCliResource(
   };
 }
 
-function resolveCombatCliSkill(
-  sheet: CombatCliSheetPreset,
-  skill: CombatCliSkillTrainingPreset,
+function resolveCombatSkill(
+  sheet: CombatSheetPreset,
+  skill: CombatSkillTrainingPreset,
   halfLevel: number,
-): CombatCliResolvedSkill {
+): CombatResolvedSkill {
   const definition = getSkillDefinition(skill.skillId);
   const attributeModifier = sheet.attributes[definition.attributeKey];
   const trainingBonus = skill.trained ? TRAINED_SKILL_BONUS : 0;
@@ -639,8 +639,8 @@ function resolveCombatCliSkill(
   };
 }
 
-function getSkillDefinition(skillId: CombatCliSkillId): CombatCliSkillDefinition {
-  const definition = COMBAT_CLI_SKILL_DEFINITIONS.find(
+function getSkillDefinition(skillId: CombatSkillId): CombatSkillDefinition {
+  const definition = COMBAT_SKILL_DEFINITIONS.find(
     (entry) => entry.id === skillId,
   );
   if (!definition) {
@@ -651,9 +651,9 @@ function getSkillDefinition(skillId: CombatCliSkillId): CombatCliSkillDefinition
 }
 
 function getResolvedSkill(
-  skills: readonly CombatCliResolvedSkill[],
-  skillId: CombatCliSkillId,
-): CombatCliResolvedSkill {
+  skills: readonly CombatResolvedSkill[],
+  skillId: CombatSkillId,
+): CombatResolvedSkill {
   const skill = skills.find((entry) => entry.skillId === skillId);
   if (!skill) {
     throw new Error(`Missing CLI resolved skill for ${skillId}`);

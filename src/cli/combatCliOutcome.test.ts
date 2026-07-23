@@ -1,5 +1,5 @@
-﻿import { describe, expect, it } from 'vitest';
-import { COMBAT_CLI_RESOLVED_SHEETS } from './combatCliPresets';
+import { describe, expect, it } from 'vitest';
+import { COMBAT_RESOLVED_SHEETS } from '../content/combatPresets';
 import { formatCombatCliEndSummary, formatCombatCliOutcome } from './combatCliOutcome';
 
 describe('formatCombatCliOutcome', () => {
@@ -10,7 +10,7 @@ describe('formatCombatCliOutcome', () => {
           status: 'ongoing',
           activeTeamIds: ['team_player', 'team_opponent'],
         },
-        COMBAT_CLI_RESOLVED_SHEETS,
+        COMBAT_RESOLVED_SHEETS,
       ),
     ).toBe('ongoing (Training Vanguard vs Practice Raider)');
   });
@@ -22,7 +22,7 @@ describe('formatCombatCliOutcome', () => {
           status: 'resolved',
           winningTeamId: 'team_player',
         },
-        COMBAT_CLI_RESOLVED_SHEETS,
+        COMBAT_RESOLVED_SHEETS,
       ),
     ).toBe('resolved, winner: Training Vanguard');
   });
@@ -36,7 +36,7 @@ describe('formatCombatCliEndSummary', () => {
           status: 'resolved',
           winningTeamId: 'team_player',
         },
-        COMBAT_CLI_RESOLVED_SHEETS,
+        COMBAT_RESOLVED_SHEETS,
       ),
     ).toBe('Combat resolved: Training Vanguard wins. Type restart to play again.');
   });
@@ -48,7 +48,7 @@ describe('formatCombatCliEndSummary', () => {
           status: 'ongoing',
           activeTeamIds: ['team_player', 'team_opponent'],
         },
-        COMBAT_CLI_RESOLVED_SHEETS,
+        COMBAT_RESOLVED_SHEETS,
       ),
     ).toBeUndefined();
   });
