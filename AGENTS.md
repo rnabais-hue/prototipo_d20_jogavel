@@ -96,15 +96,17 @@ Allowed dependency direction should move inward toward pure rules and content, n
 
 ## Validation
 
-Before completion, run when relevant:
+This project uses **pnpm**, pinned in `package.json` under `packageManager` and enabled with
+`corepack enable`. Before completion, run when relevant:
 
 ```bash
-npm run test
-npm run typecheck
-npm run build
+pnpm test
+pnpm typecheck
+pnpm build
 ```
 
-If the local environment lacks global Node/NPM, explain the limitation and validate with the available local runtime when possible.
+If the local environment lacks pnpm or corepack, explain the limitation and validate with the
+available local runtime when possible.
 
 ## Change Hygiene
 

@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "description": "custom d20-inspired tactical RPG prototype",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "combat:cli": "vite-node src/cli/combatCli.ts",

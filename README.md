@@ -122,24 +122,28 @@ Any time:
 
 ## Commands
 
+This project uses **pnpm**, pinned in `package.json` under `packageManager`. Enable it once per
+machine with `corepack enable` (corepack ships with Node), then `pnpm install`. Node version is
+declared in `.nvmrc` and `engines`; `nvm use` picks it up.
+
 Use these validation commands before handing off changes:
 
 ```bash
-npm run test
-npm run typecheck
-npm run build
+pnpm test
+pnpm typecheck
+pnpm build
 ```
 
 For local development:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 For the terminal combat harness:
 
 ```bash
-npm run combat:cli
+pnpm combat:cli
 ```
 
 ## Documentation

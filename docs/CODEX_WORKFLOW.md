@@ -23,9 +23,9 @@ This project is a local and private **custom d20-inspired tactical RPG prototype
 Run these before handoff when code or config changes are made:
 
 ```bash
-npm run test
-npm run typecheck
-npm run build
+pnpm test
+pnpm typecheck
+pnpm build
 ```
 
 For documentation-only changes, at minimum verify that the requested files exist. If docs include command or architecture guidance, keep it consistent with `package.json` and the current `src/` layout.
