@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Enables pnpm at the exact version pinned in package.json under
+      # "packageManager", so CI and local development cannot drift.
+      - name: Enable corepack
+        run: corepack enable
+
+      # Node version comes from .nvmrc so it is declared in one place.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      # --frozen-lockfile fails if pnpm-lock.yaml is out of sync with
+      # package.json, which is the whole point of pinning the toolchain.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm test
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build

@@ -134,6 +134,9 @@ pnpm typecheck
 pnpm build
 ```
 
+The same three run in CI on every pull request and on pushes to `master`
+(`.github/workflows/ci.yml`), against a frozen lockfile.
+
 For local development:
 
 ```bash
