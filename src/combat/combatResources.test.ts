@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { COMBAT_ACTORS, resolveCombatSheets } from '../content/combatPresets';
+import { COMBAT_ACTORS } from '../content/combatPresets';
+import { resolveCombatSheets } from './combatSheet';
 import {
   canSpendCombatResource,
   createCombatResourceState,

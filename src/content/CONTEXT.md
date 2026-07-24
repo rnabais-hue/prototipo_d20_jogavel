@@ -12,12 +12,11 @@ content is a data edit and never an engine change.
 
 ## 2. Imports
 - MAY import from `src/rules/` (pure helpers and the pack validator).
-- MUST NEVER import from `src/game/`, `src/ui/`, `src/exploration/`, `src/movement/`,
-  Phaser, or any browser API. The engine consumes this pack; this pack must not reach
-  back into it.
-- Known pending edge: `combatPresets.ts` still imports `getCombatWeaponRangeProfile` from
-  `src/combat/combatWeaponRange.ts` because sheet-resolution logic still lives here. Moving
-  that logic to the engine and cutting the edge is **task 06**, not this task.
+- MUST NEVER import from `src/combat/`, `src/game/`, `src/ui/`, `src/exploration/`,
+  `src/movement/`, Phaser, or any browser API. The engine consumes this pack; this pack
+  must not reach back into it.
+- Sheet resolution is engine work and lives in `src/combat/combatSheet.ts` (decision 0054).
+  This pack declares presets; the engine turns them into resolved sheets.
 
 ## 3. Common tasks — edit data only, in `src/content/combatPresets.ts`
 - **Add an attribute:** append its key to `COMBAT_ATTRIBUTE_KEYS`, then give every actor a

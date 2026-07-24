@@ -1,4 +1,4 @@
-import type { CombatResolvedSheet } from '../content/combatPresets';
+import type { CombatResolvedSheet } from '../combat/combatSheet';
 import { getCombatResource, type CombatResourceStateByParticipant } from '../combat/combatResources';
 
 export type CombatCliActionMenuInput = {

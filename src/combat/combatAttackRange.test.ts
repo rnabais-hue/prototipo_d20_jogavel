@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { validateCombatSessionAttackRange } from './combatAttackRange';
 import { createCombatPositioningState } from './combatPositioning';
 import type { CombatSession } from './combatSession';
-import type { CombatResolvedWeapon } from '../content/combatPresets';
+import type { CombatResolvedWeapon } from './combatSheet';
 
 function createMockSession(positions: Record<string, { x: number; y: number }>): CombatSession {
   const placements = Object.entries(positions).map(([participantId, cell]) => ({

@@ -1,5 +1,5 @@
 import type { EncounterOutcome } from '../rules/tacticalEncounter';
-import type { CombatResolvedSheet } from '../content/combatPresets';
+import type { CombatResolvedSheet } from '../combat/combatSheet';
 
 export function formatCombatCliOutcome(
   outcome: EncounterOutcome,

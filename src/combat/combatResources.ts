@@ -1,4 +1,4 @@
-import type { CombatResolvedSheet } from '../content/combatPresets';
+import type { CombatResolvedSheet } from './combatSheet';
 
 export type CombatResourceState = {
   participantId: string;

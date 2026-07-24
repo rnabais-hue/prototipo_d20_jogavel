@@ -21,10 +21,12 @@ import {
 import {
   COMBAT_ENCOUNTER_PRESETS,
   DEFAULT_COMBAT_ENCOUNTER_ID,
+} from '../content/combatPresets';
+import {
   getCombatEncounterPreset,
   type CombatResolvedAbility,
   type CombatResolvedSheet,
-} from '../content/combatPresets';
+} from '../combat/combatSheet';
 import { formatCombatCliActionMenu } from './combatCliActions';
 import { createCombatCliDice } from './combatCliDice';
 import { getEnemyScriptDecision } from '../combat/enemyScript';

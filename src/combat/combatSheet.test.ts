@@ -3,10 +3,12 @@ import {
   COMBAT_ACTORS,
   COMBAT_ENCOUNTER_PRESETS,
   DEFAULT_COMBAT_ENCOUNTER_ID,
+} from '../content/combatPresets';
+import {
   getCombatEncounterPreset,
   resolveCombatEncounterPreset,
   resolveCombatSheets,
-} from './combatPresets';
+} from './combatSheet';
 
 describe('resolveCombatSheets', () => {
   it('resolves melee from attribute, half level, and trained bonus', () => {

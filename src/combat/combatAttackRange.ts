@@ -1,7 +1,7 @@
 import type { CombatSession } from './combatSession';
 import { getCombatParticipantCell } from './combatPositioning';
 import { getManhattanDistance } from '../movement/moveRange';
-import type { CombatResolvedWeapon } from '../content/combatPresets';
+import type { CombatResolvedWeapon } from './combatSheet';
 import type { CombatWeaponRangeBand } from './combatWeaponRange';
 
 export type CombatAttackRangeValidation =

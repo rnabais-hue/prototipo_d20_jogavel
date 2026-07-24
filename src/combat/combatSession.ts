@@ -11,15 +11,15 @@ import {
   type TacticalEncounter,
 } from '../rules/tacticalEncounter';
 import { getEnemyScriptDecision } from './enemyScript';
+import { DEFAULT_COMBAT_ENCOUNTER_ID } from '../content/combatPresets';
 import {
-  DEFAULT_COMBAT_ENCOUNTER_ID,
   getCombatEncounterPreset,
   resolveCombatEncounterPreset,
   type CombatResolvedAbility,
   type CombatResolvedAction,
   type CombatResolvedEncounterPreset,
   type CombatResolvedSheet,
-} from '../content/combatPresets';
+} from './combatSheet';
 import {
   createCombatResourceState,
   spendCombatResource,
