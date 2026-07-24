@@ -85,6 +85,28 @@ testable without a browser. It waits until Phase C lands and version control has
 A linter and formatter are deferred for the same reason: introducing one now would produce a
 diff large enough to bury the history at exactly the moment the history starts.
 
+## Writing acceptance criteria
+
+A criterion is only useful if it is mechanically checkable **and** actually satisfiable. Three
+criteria written for tasks 04 and 06 failed that bar and cost two agent stops and one
+documented discrepancy. The failures rhyme, so the rules below are cheap insurance:
+
+1. **Run the command against the current tree before putting it in a task file.** A grep that
+   already fails on the main branch is not a criterion, it is a trap. Task 06's
+   `grep -v "from './"` flagged `../rules/` imports that the architecture explicitly permits,
+   and it failed on the main branch before the task ever started.
+2. **Beware homonyms.** A bare literal grep cannot tell two concepts apart when they share a
+   spelling. Task 04 banned `'melee'` without noticing it names both a content skill id and an
+   engine weapon range band.
+3. **State the invariant, not a proxy for it.** "No engine production code branches on a
+   literal content id" survives refactors; "this token appears nowhere" does not.
+4. **One concern per task.** Task 04 bundled "identifiers become data" with "resolution logic
+   leaves the content pack", which made two of its own criteria mutually unsatisfiable. The
+   second concern became task 06 and went through cleanly on its own.
+
+When an agent reports that criteria collide, the default assumption is that the specification
+is wrong, not the agent. Fix the task file, commit the fix, then resume.
+
 ## Recurring audit
 
 Every two to three milestones, run an architectural audit with a model that did not write the
