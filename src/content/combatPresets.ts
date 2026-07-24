@@ -1,5 +1,6 @@
 import { COMBAT_FIXTURE_IDS } from '../rules/combatFixtures';
-import { getCombatWeaponRangeProfile, isCombatWeaponRangeBand, type CombatWeaponRangeBand, type CombatWeaponRangeProfile } from '../combat/combatWeaponRange';
+import { validateCombatPack } from '../rules/combatPackValidation';
+import { getCombatWeaponRangeProfile, isCombatWeaponRangeBand, type CombatWeaponRangeProfile } from '../combat/combatWeaponRange';
 
 export type CombatActorPreset = {
   participantId: string;
@@ -22,17 +23,26 @@ export type CombatResolvedEncounterPreset = {
   sheets: readonly CombatResolvedSheet[];
 };
 
-export type CombatAttributeKey =
-  | 'strength'
-  | 'dexterity'
-  | 'constitution'
-  | 'intelligence'
-  | 'wisdom'
-  | 'charisma';
+// Content identifiers are open `string` values, enumerated by the content pack
+// and checked at load time, not closed literal unions in the engine. See
+// decision 0048 and `src/content/CONTEXT.md`.
+export type CombatAttributeKey = string;
 
-export type CombatAttributeSet = Record<CombatAttributeKey, number>;
+export type CombatAttributeSet = Record<string, number>;
 
-export type CombatSkillId = 'melee';
+export type CombatSkillId = string;
+
+// The attribute keys this pack declares as valid, as data rather than a type.
+// Load-time validation (see `src/rules/combatPackValidation.ts`) checks every
+// referenced attribute key against this set.
+export const COMBAT_ATTRIBUTE_KEYS = [
+  'strength',
+  'dexterity',
+  'constitution',
+  'intelligence',
+  'wisdom',
+  'charisma',
+] as const satisfies readonly string[];
 
 export type CombatSkillDefinition = {
   id: CombatSkillId;
@@ -83,7 +93,7 @@ export type CombatActionPreset = {
   };
 };
 
-export type CombatWeaponPreset = { weaponId: string; label: string; rangeBand: CombatWeaponRangeBand };
+export type CombatWeaponPreset = { weaponId: string; label: string; rangeBand: string };
 
 export type CombatAbilityPreset = {
   abilityId: string;
@@ -465,6 +475,24 @@ export const COMBAT_ENCOUNTER_PRESETS = [
     participants: [COMBAT_ACTORS.player, COMBAT_ACTORS.opponentHero],
   },
 ] as const satisfies readonly CombatEncounterPreset[];
+
+// Validate the pack against its declared identifiers before it is resolved, so
+// a dangling or duplicated id fails loudly and legibly here instead of surfacing
+// later as a silent NaN or undefined. Validation is a pure read model; this call
+// site is the load-time gate that acts on its structured result.
+const COMBAT_PACK_VALIDATION = validateCombatPack({
+  attributeKeys: COMBAT_ATTRIBUTE_KEYS,
+  skills: COMBAT_SKILL_DEFINITIONS,
+  actors: Object.values(COMBAT_ACTORS),
+});
+
+if (!COMBAT_PACK_VALIDATION.ok) {
+  throw new Error(
+    `Invalid combat content pack: ${COMBAT_PACK_VALIDATION.issues
+      .map((issue) => `[${issue.code}] ${issue.reason}`)
+      .join('; ')}`,
+  );
+}
 
 export const COMBAT_RESOLVED_SHEETS = resolveCombatSheets(
   COMBAT_PARTICIPANTS,
