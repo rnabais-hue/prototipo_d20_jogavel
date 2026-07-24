@@ -59,6 +59,7 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `03-continuous-integration.md` | Enforce the validation gate mechanically | 00 |
 | `04-content-identifiers-as-data.md` | Content ids become data, not closed types | 01 |
 | `05` — not yet written | Reconcile the two parallel content models | 04 |
+| `06-move-resolution-out-of-content.md` | Sheet resolution logic leaves the content pack | 04 |
 
 Task 03 is optional but recommended before further multi-model work. Documentation is
 advisory; continuous integration is binding.

@@ -85,27 +85,22 @@ Ela é cálculo determinístico sobre dado, não orquestração.
 Chame a validação nos pontos onde o pack é resolvido, de modo que um pack inválido falhe de
 forma explícita e legível em vez de produzir `NaN` ou `undefined` silencioso.
 
-### 4. Fechar a aresta `content -> combat`
+### 4. O campo `rangeBand` do pack vira `string`
 
-`src/content/combatPresets.ts` importa de `src/combat/combatWeaponRange.ts`:
+No **dado** dos presets, tipe o campo `rangeBand` como `string`, coerente com o resto desta
+tarefa. Isso não exige mexer na lógica de resolução: o guard `isCombatWeaponRangeBand` já
+aceita `string` e continua validando o valor.
 
-```ts
-import { getCombatWeaponRangeProfile, isCombatWeaponRangeBand, ... } from '../combat/combatWeaponRange';
-```
+**Escopo:** NÃO feche a aresta `content -> combat` nesta tarefa. A lógica de resolução
+(`resolveCombatSheets`, `resolveCombatEncounterPreset`, `COMBAT_RESOLVED_SHEETS`) hoje mora em
+`src/content/combatPresets.ts` e importa do motor. Movê-la para o motor é uma refatoração de
+movimentação distinta — é *lógica saindo do content*, não *identificadores virando dado* — que
+toca imports em quatro arquivos de teste e merece PR próprio, como a tarefa 01. Ela está
+descopada desta tarefa e adiada para a **tarefa 06**. A aresta é pré-existente (herdada, decisão
+0050) e não urgente. Deixe `resolveCombatSheets` e o import do motor onde estão.
 
-Isso é um ciclo no nível de camada. A decisão 0047 e o `docs/ARCHITECTURE.md` dizem que
-`src/content/` é dado, sem lógica, e é folha na direção de dependência. A aresta é anterior à
-tarefa 01 — foi herdada, não introduzida — e está registrada na decisão 0050.
-
-Feche-a pelo mesmo princípio desta tarefa: o pack declara a faixa de alcance como **dado**
-(`rangeBand: string`), e a resolução do perfil de alcance acontece no motor, no momento em que
-a ficha é resolvida. O pack para de importar qualquer coisa do motor.
-
-Ao final, este comando deve retornar vazio:
-
-```
-grep -rn "^import" src/content/*.ts | grep -v "from './"
-```
+O `CONTEXT.md` que você vai escrever deve registrar essa pendência em uma linha: a resolução
+ainda vive aqui e sai na tarefa 06.
 
 ### 5. Contexto do compartimento
 
