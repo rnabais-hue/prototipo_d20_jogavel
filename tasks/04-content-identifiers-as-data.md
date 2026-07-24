@@ -135,14 +135,26 @@ para adicionar conteúdo, a tarefa não atingiu o objetivo.
 
 1. Nenhuma união literal de identificador de conteúdo permanece em `src/`. Em particular,
    `CombatAttributeKey` e `CombatSkillId` não são mais uniões fechadas.
-2. Fora de `src/content/`, o motor não menciona nenhum identificador de conteúdo literal. Estes
-   comandos devem retornar vazio:
+2. Fora de `src/content/`, o motor não menciona nenhuma **chave de atributo** literal. Este
+   comando deve retornar vazio:
    ```
    grep -rn "'strength'\|'dexterity'\|'constitution'\|'intelligence'\|'wisdom'\|'charisma'" src --include=*.ts | grep -v "^src/content/"
-   grep -rn "'melee'" src --include=*.ts | grep -v "^src/content/"
    ```
-   Testes que precisem de um id concreto devem obtê-lo do pack de conteúdo ou de uma fixture,
-   nunca escrevê-lo literalmente.
+   Nota sobre `'melee'`: este token é **homônimo**. É simultaneamente um id de perícia de
+   conteúdo (`skillId`) e uma faixa de alcance de arma do motor (`CombatWeaponRangeBand =
+   'melee' | 'short' | 'long'`). A faixa de alcance é **estrutura do motor e permanece fechada**
+   (é saída observável verificada por testes existentes). Portanto **não** existe um grep de
+   `'melee'` como critério — bani-lo exigiria renomear a faixa, o que mudaria comportamento e
+   editaria testes existentes, ambos proibidos. O que importa aqui é a regra da decisão 0048,
+   verificada pelo critério 2b abaixo: nenhum código de produção do motor **ramifica** sobre um
+   id de perícia literal.
+
+2b. Nenhum módulo de produção do motor (exclua `*.test.ts` e `src/content/`) contém igualdade,
+   `switch` ou tabela indexada por um id de perícia literal. Verifique manualmente as
+   ocorrências de `skillId` fora de `src/content/` e confirme que nenhuma é uma ramificação
+   sobre valor — todas devem apenas transportar o `skillId` como dado opaco. Fixtures de teste
+   que constroem dado com um id literal são aceitáveis e ficam como estão; não edite testes
+   existentes para removê-las.
 3. **Os 430 testes existentes continuam passando.** Esta tarefa **está autorizada** a aumentar
    a contagem, exclusivamente com os testes novos da função de validação. Nenhum teste
    existente pode ser alterado, exceto por nome de tipo. Reporte a nova contagem.
