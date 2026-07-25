@@ -55,6 +55,10 @@ export type CombatPackIssueCode =
   | 'unknown_skill_id'
   | 'unknown_weapon_id'
   | 'unknown_resource_id'
+  | 'unknown_feature_id'
+  | 'unknown_equipment_id'
+  | 'unknown_action_id'
+  | 'missing_attribute_key'
   | 'duplicate_id';
 
 export type CombatPackIssue = {
@@ -183,6 +187,171 @@ export function validateCombatPack(pack: CombatPack): CombatPackValidationResult
   }
 
   return { ok: issues.length === 0, issues };
+}
+
+// --- Tactical catalog structure ---------------------------------------------
+//
+// The content pack also declares the extensible catalog structure consumed by
+// `buildTacticalParticipant`: ancestries, archetypes, attribute presets,
+// features, equipment, and action definitions, with grant/start relationships
+// between them. These validators cover that half of the unified pack against the
+// same declared attribute-key set. They stay content-id agnostic: the declared
+// keys arrive as data and no identifier is hard-coded.
+
+type CatalogModifierOwner = {
+  id: string;
+  attributeModifiers?: Readonly<Record<string, unknown>>;
+};
+
+export type CatalogAncestry = CatalogModifierOwner & {
+  grantedFeatureIds?: readonly string[];
+  grantedActionIds?: readonly string[];
+};
+
+export type CatalogArchetype = CatalogModifierOwner & {
+  grantedFeatureIds?: readonly string[];
+  grantedActionIds?: readonly string[];
+  startingEquipmentIds?: readonly string[];
+};
+
+export type CatalogAttributePreset = {
+  id: string;
+  attributes: Readonly<Record<string, number>>;
+};
+
+export type CatalogEquipment = CatalogModifierOwner & {
+  grantedActionIds?: readonly string[];
+};
+
+export type ContentPackCatalogs = {
+  attributeKeys: readonly string[];
+  ancestries: readonly CatalogAncestry[];
+  archetypes: readonly CatalogArchetype[];
+  attributePresets: readonly CatalogAttributePreset[];
+  features: readonly { id: string }[];
+  equipment: readonly CatalogEquipment[];
+  actions: readonly { id: string }[];
+};
+
+export function validateTacticalCatalogs(
+  catalogs: ContentPackCatalogs,
+): CombatPackValidationResult {
+  const issues: CombatPackIssue[] = [];
+  const attributeKeys = new Set(catalogs.attributeKeys);
+  const featureIds = new Set(catalogs.features.map((feature) => feature.id));
+  const equipmentIds = new Set(catalogs.equipment.map((entry) => entry.id));
+  const actionIds = new Set(catalogs.actions.map((action) => action.id));
+
+  collectDuplicates(issues, catalogs.ancestries.map((entry) => entry.id), 'ancestries', 'ancestry');
+  collectDuplicates(issues, catalogs.archetypes.map((entry) => entry.id), 'archetypes', 'archetype');
+  collectDuplicates(issues, catalogs.attributePresets.map((entry) => entry.id), 'attributePresets', 'attribute preset');
+  collectDuplicates(issues, catalogs.features.map((entry) => entry.id), 'features', 'feature');
+  collectDuplicates(issues, catalogs.equipment.map((entry) => entry.id), 'equipment', 'equipment');
+  collectDuplicates(issues, catalogs.actions.map((entry) => entry.id), 'actions', 'action');
+
+  for (const preset of catalogs.attributePresets) {
+    const presetKeys = Object.keys(preset.attributes);
+    const presetKeySet = new Set(presetKeys);
+    for (const key of presetKeys) {
+      if (!attributeKeys.has(key)) {
+        issues.push({
+          code: 'unknown_attribute_key',
+          scope: `attributePreset:${preset.id}`,
+          id: key,
+          reason: `attribute preset "${preset.id}" references unknown attribute key "${key}"`,
+        });
+      }
+    }
+    for (const declared of catalogs.attributeKeys) {
+      if (!presetKeySet.has(declared)) {
+        issues.push({
+          code: 'missing_attribute_key',
+          scope: `attributePreset:${preset.id}`,
+          id: declared,
+          reason: `attribute preset "${preset.id}" is missing declared attribute key "${declared}"`,
+        });
+      }
+    }
+  }
+
+  validateModifierKeys(issues, catalogs.ancestries, 'ancestry', attributeKeys);
+  validateModifierKeys(issues, catalogs.archetypes, 'archetype', attributeKeys);
+  validateModifierKeys(issues, catalogs.equipment, 'equipment', attributeKeys);
+
+  validateReferenceIds(issues, catalogs.ancestries, 'ancestry', (entry) => entry.grantedFeatureIds, featureIds, 'unknown_feature_id', 'feature');
+  validateReferenceIds(issues, catalogs.archetypes, 'archetype', (entry) => entry.grantedFeatureIds, featureIds, 'unknown_feature_id', 'feature');
+
+  validateReferenceIds(issues, catalogs.archetypes, 'archetype', (entry) => entry.startingEquipmentIds, equipmentIds, 'unknown_equipment_id', 'equipment');
+
+  validateReferenceIds(issues, catalogs.ancestries, 'ancestry', (entry) => entry.grantedActionIds, actionIds, 'unknown_action_id', 'action');
+  validateReferenceIds(issues, catalogs.archetypes, 'archetype', (entry) => entry.grantedActionIds, actionIds, 'unknown_action_id', 'action');
+  validateReferenceIds(issues, catalogs.equipment, 'equipment', (entry) => entry.grantedActionIds, actionIds, 'unknown_action_id', 'action');
+
+  return { ok: issues.length === 0, issues };
+}
+
+// --- Unified content pack -----------------------------------------------------
+//
+// The single entry the load-time gate calls: it validates the combat preset data
+// and the tactical catalog structure against one declared attribute-key set and
+// merges their issues into one result. There is one gate, not two.
+
+export type ContentPack = {
+  combat: CombatPack;
+  catalogs: ContentPackCatalogs;
+};
+
+export function validateContentPack(pack: ContentPack): CombatPackValidationResult {
+  const combat = validateCombatPack(pack.combat);
+  const catalogs = validateTacticalCatalogs(pack.catalogs);
+  const issues = [...combat.issues, ...catalogs.issues];
+  return { ok: issues.length === 0, issues };
+}
+
+function validateModifierKeys(
+  issues: CombatPackIssue[],
+  owners: readonly CatalogModifierOwner[],
+  ownerLabel: string,
+  attributeKeys: ReadonlySet<string>,
+): void {
+  for (const owner of owners) {
+    if (!owner.attributeModifiers) {
+      continue;
+    }
+    for (const key of Object.keys(owner.attributeModifiers)) {
+      if (!attributeKeys.has(key)) {
+        issues.push({
+          code: 'unknown_attribute_key',
+          scope: `${ownerLabel}:${owner.id}.modifier`,
+          id: key,
+          reason: `${ownerLabel} "${owner.id}" modifier references unknown attribute key "${key}"`,
+        });
+      }
+    }
+  }
+}
+
+function validateReferenceIds<T extends { id: string }>(
+  issues: CombatPackIssue[],
+  owners: readonly T[],
+  ownerLabel: string,
+  select: (owner: T) => readonly string[] | undefined,
+  known: ReadonlySet<string>,
+  code: CombatPackIssueCode,
+  refLabel: string,
+): void {
+  for (const owner of owners) {
+    for (const ref of select(owner) ?? []) {
+      if (!known.has(ref)) {
+        issues.push({
+          code,
+          scope: `${ownerLabel}:${owner.id}`,
+          id: ref,
+          reason: `${ownerLabel} "${owner.id}" references unknown ${refLabel} id "${ref}"`,
+        });
+      }
+    }
+  }
 }
 
 function collectDuplicates(

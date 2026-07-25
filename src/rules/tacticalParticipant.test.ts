@@ -24,10 +24,12 @@ describe('buildTacticalParticipant', () => {
         archetypeId: 'martial_vanguard',
         attributePresetId: 'balanced_start',
         attributes: {
-          force: 4,
-          agility: 2,
-          mind: 1,
-          presence: 1,
+          strength: 4,
+          dexterity: 2,
+          constitution: 0,
+          intelligence: 1,
+          wisdom: 0,
+          charisma: 1,
         },
         featureIds: ['steady_focus', 'trained_guard'],
         actionIds: ['basic_strike'],
@@ -52,10 +54,12 @@ describe('buildTacticalParticipant', () => {
     }
 
     expect(result.participant.attributes).toEqual({
-      force: 4,
-      agility: 2,
-      mind: 1,
-      presence: 1,
+      strength: 4,
+      dexterity: 2,
+      constitution: 0,
+      intelligence: 1,
+      wisdom: 0,
+      charisma: 1,
     });
   });
 
@@ -129,7 +133,7 @@ describe('buildTacticalParticipant', () => {
           id: 'wind_origin',
           name: 'Wind Origin',
           attributeModifiers: {
-            agility: 3,
+            dexterity: 3,
           },
           grantedFeatureIds: ['quick_step'],
         },
@@ -139,7 +143,7 @@ describe('buildTacticalParticipant', () => {
           id: 'signal_keeper',
           name: 'Signal Keeper',
           attributeModifiers: {
-            mind: 2,
+            intelligence: 2,
           },
           grantedActionIds: ['mark_target'],
           startingEquipmentIds: ['signal_staff'],
@@ -150,10 +154,12 @@ describe('buildTacticalParticipant', () => {
           id: 'sharp_start',
           name: 'Sharp Start',
           attributes: {
-            force: 0,
-            agility: 1,
-            mind: 2,
-            presence: 1,
+            strength: 0,
+            dexterity: 1,
+            constitution: 0,
+            intelligence: 2,
+            wisdom: 0,
+            charisma: 1,
           },
         },
       ],
@@ -169,7 +175,7 @@ describe('buildTacticalParticipant', () => {
           name: 'Signal Staff',
           slot: 'main_hand',
           attributeModifiers: {
-            presence: 1,
+            charisma: 1,
           },
           grantedActionIds: ['steady_signal'],
         },
@@ -205,10 +211,12 @@ describe('buildTacticalParticipant', () => {
         archetypeId: 'signal_keeper',
         attributePresetId: 'sharp_start',
         attributes: {
-          force: 0,
-          agility: 4,
-          mind: 4,
-          presence: 2,
+          strength: 0,
+          dexterity: 4,
+          constitution: 0,
+          intelligence: 4,
+          wisdom: 0,
+          charisma: 2,
         },
         featureIds: ['quick_step'],
         actionIds: ['mark_target', 'steady_signal'],

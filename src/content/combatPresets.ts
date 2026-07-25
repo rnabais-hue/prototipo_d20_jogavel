@@ -1,5 +1,6 @@
 import { COMBAT_FIXTURE_IDS } from '../rules/combatFixtures';
-import { validateCombatPack } from '../rules/combatPackValidation';
+import { validateContentPack } from '../rules/combatPackValidation';
+import { mvpTacticalCatalogs } from './tacticalCatalogs';
 
 export type CombatActorPreset = {
   participantId: string;
@@ -404,19 +405,29 @@ export const COMBAT_ENCOUNTER_PRESETS = [
   },
 ] as const satisfies readonly CombatEncounterPreset[];
 
-// Validate the pack against its declared identifiers before it is resolved, so
-// a dangling or duplicated id fails loudly and legibly here instead of surfacing
-// later as a silent NaN or undefined. Validation is a pure read model; this call
-// site is the load-time gate that acts on its structured result.
-const COMBAT_PACK_VALIDATION = validateCombatPack({
-  attributeKeys: COMBAT_ATTRIBUTE_KEYS,
-  skills: COMBAT_SKILL_DEFINITIONS,
-  actors: Object.values(COMBAT_ACTORS),
+// The single load-time gate for the unified content pack. It validates both the
+// combat preset data and the retained tactical catalog structure against one
+// declared attribute-key set (`COMBAT_ATTRIBUTE_KEYS`), so a dangling or
+// duplicated id in either half fails loudly and legibly here instead of
+// surfacing later as a silent NaN or undefined. The dependency between the two
+// content files is one-directional (this module reads the catalogs; the catalog
+// module never reads back), so the eager gate has no import cycle to trip on.
+// Validation is a pure read model; this call site acts on its structured result.
+const CONTENT_PACK_VALIDATION = validateContentPack({
+  combat: {
+    attributeKeys: COMBAT_ATTRIBUTE_KEYS,
+    skills: COMBAT_SKILL_DEFINITIONS,
+    actors: Object.values(COMBAT_ACTORS),
+  },
+  catalogs: {
+    attributeKeys: COMBAT_ATTRIBUTE_KEYS,
+    ...mvpTacticalCatalogs,
+  },
 });
 
-if (!COMBAT_PACK_VALIDATION.ok) {
+if (!CONTENT_PACK_VALIDATION.ok) {
   throw new Error(
-    `Invalid combat content pack: ${COMBAT_PACK_VALIDATION.issues
+    `Invalid content pack: ${CONTENT_PACK_VALIDATION.issues
       .map((issue) => `[${issue.code}] ${issue.reason}`)
       .join('; ')}`,
   );

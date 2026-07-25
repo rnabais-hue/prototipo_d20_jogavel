@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   validateCombatPack,
+  validateContentPack,
+  validateTacticalCatalogs,
   type CombatPack,
+  type ContentPackCatalogs,
 } from './combatPackValidation';
 
 // A minimal, self-contained valid pack. Identifiers are arbitrary placeholders,
@@ -201,6 +204,179 @@ describe('validateCombatPack', () => {
     expect(result.ok).toBe(false);
     expect(result.issues.map((issue) => issue.code)).toEqual(
       expect.arrayContaining(['unknown_weapon_id', 'unknown_resource_id']),
+    );
+  });
+});
+
+// A minimal, self-contained valid tactical catalog set. Identifiers are arbitrary
+// placeholders and the declared attribute keys arrive as data, not literals.
+function createValidCatalogs(): ContentPackCatalogs {
+  return {
+    attributeKeys: ['power', 'reflex'],
+    ancestries: [
+      {
+        id: 'stone_origin',
+        attributeModifiers: { power: 1 },
+        grantedFeatureIds: ['steady'],
+        grantedActionIds: ['guard'],
+      },
+    ],
+    archetypes: [
+      {
+        id: 'vanguard',
+        attributeModifiers: { reflex: 1 },
+        grantedFeatureIds: ['steady'],
+        grantedActionIds: ['strike'],
+        startingEquipmentIds: ['blade'],
+      },
+    ],
+    attributePresets: [
+      {
+        id: 'even_start',
+        attributes: { power: 1, reflex: 1 },
+      },
+    ],
+    features: [{ id: 'steady' }],
+    equipment: [
+      { id: 'blade', attributeModifiers: { power: 1 }, grantedActionIds: ['strike'] },
+    ],
+    actions: [{ id: 'strike' }, { id: 'guard' }],
+  };
+}
+
+describe('validateTacticalCatalogs', () => {
+  it('accepts a fully consistent catalog set', () => {
+    const result = validateTacticalCatalogs(createValidCatalogs());
+    expect(result.ok).toBe(true);
+    expect(result.issues).toEqual([]);
+  });
+
+  it('flags an attribute preset referencing an unknown attribute key', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.attributePresets = [
+      { id: 'even_start', attributes: { power: 1, reflex: 1, luck: 1 } },
+    ];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'unknown_attribute_key',
+        scope: 'attributePreset:even_start',
+        id: 'luck',
+      }),
+    );
+  });
+
+  it('flags a modifier referencing an unknown attribute key', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.equipment = [
+      { id: 'blade', attributeModifiers: { luck: 1 }, grantedActionIds: ['strike'] },
+    ];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'unknown_attribute_key',
+        scope: 'equipment:blade.modifier',
+        id: 'luck',
+      }),
+    );
+  });
+
+  it('flags a complete attribute preset missing a declared canonical key', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.attributePresets = [{ id: 'even_start', attributes: { power: 1 } }];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'missing_attribute_key',
+        scope: 'attributePreset:even_start',
+        id: 'reflex',
+      }),
+    );
+  });
+
+  it('flags an unknown feature id granted by an ancestry or archetype', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.archetypes[0]!.grantedFeatureIds = ['missing_feature'];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'unknown_feature_id',
+        scope: 'archetype:vanguard',
+        id: 'missing_feature',
+      }),
+    );
+  });
+
+  it('flags an unknown equipment id listed as archetype starting equipment', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.archetypes[0]!.startingEquipmentIds = ['missing_equipment'];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'unknown_equipment_id',
+        scope: 'archetype:vanguard',
+        id: 'missing_equipment',
+      }),
+    );
+  });
+
+  it('flags an unknown action id granted by ancestry, archetype, or equipment', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.equipment[0]!.grantedActionIds = ['missing_action'];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'unknown_action_id',
+        scope: 'equipment:blade',
+        id: 'missing_action',
+      }),
+    );
+  });
+
+  it('flags a duplicate id within a catalog collection', () => {
+    const catalogs = createValidCatalogs();
+    catalogs.features = [{ id: 'steady' }, { id: 'steady' }];
+
+    const result = validateTacticalCatalogs(catalogs);
+    expect(result.ok).toBe(false);
+    expect(result.issues).toContainEqual(
+      expect.objectContaining({ code: 'duplicate_id', scope: 'features', id: 'steady' }),
+    );
+  });
+});
+
+describe('validateContentPack', () => {
+  it('accepts a valid unified pack of combat data and tactical catalogs', () => {
+    const result = validateContentPack({
+      combat: createValidPack(),
+      catalogs: createValidCatalogs(),
+    });
+    expect(result.ok).toBe(true);
+    expect(result.issues).toEqual([]);
+  });
+
+  it('merges issues from both halves into one result', () => {
+    const combat = createValidPack();
+    combat.actors[0]!.sheet.actions[0]!.weaponId = 'missing_weapon';
+    const catalogs = createValidCatalogs();
+    catalogs.archetypes[0]!.startingEquipmentIds = ['missing_equipment'];
+
+    const result = validateContentPack({ combat, catalogs });
+    expect(result.ok).toBe(false);
+    expect(result.issues.map((issue) => issue.code)).toEqual(
+      expect.arrayContaining(['unknown_weapon_id', 'unknown_equipment_id']),
     );
   });
 });

@@ -1,4 +1,9 @@
-export type AttributeKey = 'force' | 'agility' | 'mind' | 'presence';
+// Attribute identifiers are open `string` values declared by the content pack,
+// never a closed literal union in the engine (decisions 0048 and 0055). The set
+// of valid keys is data (`COMBAT_ATTRIBUTE_KEYS` in the content pack) and is
+// checked at load time by the content-pack validator; the engine only consumes
+// the shape.
+export type AttributeKey = string;
 
 export type AttributeSet = Record<AttributeKey, number>;
 
@@ -188,8 +193,8 @@ function applyAttributeModifiers(
       continue;
     }
 
-    for (const key of Object.keys(modifierSet) as AttributeKey[]) {
-      attributes[key] += modifierSet[key] ?? 0;
+    for (const key of Object.keys(modifierSet)) {
+      attributes[key] = (attributes[key] ?? 0) + (modifierSet[key] ?? 0);
     }
   }
 

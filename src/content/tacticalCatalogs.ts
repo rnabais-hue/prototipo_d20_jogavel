@@ -6,7 +6,7 @@ export const mvpTacticalCatalogs: TacticalCatalogs = {
       id: 'baseline_origin',
       name: 'Baseline Origin',
       attributeModifiers: {
-        presence: 1,
+        charisma: 1,
       },
       grantedFeatureIds: ['steady_focus'],
       tags: ['origin'],
@@ -17,7 +17,7 @@ export const mvpTacticalCatalogs: TacticalCatalogs = {
       id: 'martial_vanguard',
       name: 'Martial Vanguard',
       attributeModifiers: {
-        force: 2,
+        strength: 2,
       },
       grantedFeatureIds: ['trained_guard'],
       startingEquipmentIds: ['starter_blade', 'plain_guard'],
@@ -29,10 +29,12 @@ export const mvpTacticalCatalogs: TacticalCatalogs = {
       id: 'balanced_start',
       name: 'Balanced Start',
       attributes: {
-        force: 2,
-        agility: 1,
-        mind: 1,
-        presence: 0,
+        strength: 2,
+        dexterity: 1,
+        constitution: 0,
+        intelligence: 1,
+        wisdom: 0,
+        charisma: 0,
       },
     },
   ],
@@ -61,7 +63,7 @@ export const mvpTacticalCatalogs: TacticalCatalogs = {
       name: 'Plain Guard',
       slot: 'off_hand',
       attributeModifiers: {
-        agility: 1,
+        dexterity: 1,
       },
       tags: ['defense'],
     },
