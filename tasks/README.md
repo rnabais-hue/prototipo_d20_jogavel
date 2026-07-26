@@ -46,7 +46,7 @@ run build
 Use the package manager declared in `package.json` under `packageManager`. The known
 non-blocking warning is the production chunk above 500 kB.
 
-The test suite baseline is **56 files, 430 tests**. A refactor that changes these numbers has
+The test suite baseline is **57 files, 452 tests**. A refactor that changes these numbers has
 changed behaviour and has failed, unless the task file explicitly authorises the change.
 
 ## Execution order
@@ -58,11 +58,12 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `02-documentation-sync.md` | Make `README.md` and `MVP_SCOPE.md` true again | 01 |
 | `03-continuous-integration.md` | Enforce the validation gate mechanically | 00 |
 | `04-content-identifiers-as-data.md` | Content ids become data, not closed types | 01 |
-| `05` — not yet written | Reconcile the two parallel content models | 04 |
+| `05-reconcile-content-models.md` | Reconcile the two parallel content models | 04, 06 |
 | `06-move-resolution-out-of-content.md` | Sheet resolution logic leaves the content pack | 04 |
+| `07-combat-visual-direction-vertical-slice.md` | Prove the modular pixel-art direction in combat | 05, 06 |
 
-Task 03 is optional but recommended before further multi-model work. Documentation is
-advisory; continuous integration is binding.
+Tasks 00 through 06 are complete and merged. Task 07 is the next implementation task after
+its specification and decision 0057 are reviewed and merged.
 
 ## Plan of record
 
@@ -77,6 +78,9 @@ terminal harness, and the documents stop describing a project that no longer exi
 content pack gains load-time validation, and the two parallel content models are reconciled
 into one. This is the phase that decides whether the project scales, and it is governed by
 decisions 0047 and 0048.
+
+**Phase D — prove the visual direction.** Task 07. Deliver a combat-only modular pixel-art
+vertical slice before applying the direction to exploration.
 
 **Deferred, deliberately.** `src/game/scenes/PrototypeScene.ts` is 1507 lines and orchestrates
 exploration, combat, HUD, console, menu, camera, layout and input. Splitting it is real work
