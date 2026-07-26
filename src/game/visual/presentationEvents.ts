@@ -29,6 +29,11 @@ export type AttackMissEvent = {
   targetId: string;
 };
 
+export type AttackRecoveryEvent = {
+  type: 'attack_recovery';
+  attackerId: string;
+};
+
 export type HealingAppliedEvent = {
   type: 'healing_applied';
   participantId: string;
@@ -57,6 +62,7 @@ export type PresentationEvent =
   | AttackAnticipationEvent
   | AttackHitEvent
   | AttackMissEvent
+  | AttackRecoveryEvent
   | HealingAppliedEvent
   | CombatantDefeatedEvent
   | TurnChangedEvent
@@ -118,7 +124,13 @@ export function mapAttackToEvents(
     });
   }
 
-  // 3. Defeat Event (if defeated)
+  // 3. Recovery always follows contact and target reaction.
+  events.push({
+    type: 'attack_recovery',
+    attackerId,
+  });
+
+  // 4. Defeat Event (if defeated)
   if (outcome === 'hit' && isTargetDefeated) {
     events.push({
       type: 'combatant_defeated',
@@ -126,7 +138,7 @@ export function mapAttackToEvents(
     });
   }
 
-  // 4. Outcome Event (if resolved)
+  // 5. Outcome Event (if resolved)
   if (attack.outcome.status === 'resolved') {
     const isPlayerWin = attack.outcome.winningTeamId === playerTeamId;
     events.push({

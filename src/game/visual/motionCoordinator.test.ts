@@ -120,6 +120,7 @@ interface TestHandle extends CombatantViewHandle {
   lastAnticipationCb?: () => void;
   lastHitCb?: () => void;
   lastMissCb?: () => void;
+  lastRecoveryCb?: () => void;
   lastDefeatedCb?: () => void;
 }
 
@@ -148,6 +149,9 @@ const createMockHandle = (id: string, isPlayer: boolean): TestHandle => {
     }),
     playMissReaction: vi.fn((attacker: { x: number; y: number }, dur: number, cb?: () => void) => {
       handle.lastMissCb = cb;
+    }),
+    playRecovery: vi.fn((dur: number, cb?: () => void) => {
+      handle.lastRecoveryCb = cb;
     }),
     prepareForDefeatAnimation: vi.fn(),
     applyDefeatedPresentation: vi.fn((dur: number, cb?: () => void) => {
@@ -337,6 +341,10 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
         isDefeated: true,
       },
       {
+        type: 'attack_recovery',
+        attackerId: 'attacker-1',
+      },
+      {
         type: 'combatant_defeated',
         participantId: 'target-1',
       },
@@ -440,7 +448,7 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
     expect(newSequenceCompleted).toBe(true);
   });
 
-  it('spawns transient visual effects or fallback graphics during events based on texture availability', () => {
+  it('uses code-native pixel impact graphics instead of painterly effect textures', () => {
     setReducedMotion(false);
 
     const { scene } = createMockScene();
@@ -456,18 +464,18 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
 
     const coordinator = new MotionCoordinator(scene, gridView);
 
-    // 1. Play anticipation event
     coordinator.play([
       {
-        type: 'attack_anticipation',
+        type: 'attack_hit',
         attackerId: 'attacker-1',
         targetId: 'target-1',
-        weaponId: 'sword',
+        damageAmount: 3,
+        isDefeated: false,
       },
     ]);
 
-    // Expect sprite to be created since texture exists
-    expect(scene.add.sprite).toHaveBeenCalled();
+    expect(scene.add.graphics).toHaveBeenCalled();
+    expect(scene.add.sprite).not.toHaveBeenCalled();
   });
 
   it('rejects invalid presentation sequence containing miss + defeat on same target', () => {
@@ -558,7 +566,7 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
     });
     target.applyDefeatedPresentation = vi.fn((duration, callback) => {
       expect(targetVisible).toBe(true);
-      expect(duration).toBe(300);
+      expect(duration).toBe(480);
       targetVisible = false;
       target.lastDefeatedCb = callback;
     });
@@ -582,6 +590,10 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
         isDefeated: true,
       },
       {
+        type: 'attack_recovery',
+        attackerId: 'attacker-1',
+      },
+      {
         type: 'combatant_defeated',
         participantId: 'target-1',
       },
@@ -596,6 +608,9 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
     expect(targetVisible).toBe(true);
 
     target.lastHitCb!();
+    expect(attacker.playRecovery).toHaveBeenCalledOnce();
+    expect(target.applyDefeatedPresentation).not.toHaveBeenCalled();
+    attacker.lastRecoveryCb!();
     expect(target.applyDefeatedPresentation).toHaveBeenCalledOnce();
     expect(targetVisible).toBe(false);
 
@@ -647,6 +662,10 @@ describe('MotionCoordinator sequencing and cancellation lifecycle', () => {
         targetId: 'target-2',
         damageAmount: 10,
         isDefeated: true,
+      },
+      {
+        type: 'attack_recovery',
+        attackerId: 'attacker-2',
       },
       {
         type: 'combatant_defeated',

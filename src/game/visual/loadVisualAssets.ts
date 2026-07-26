@@ -17,6 +17,9 @@ export function queueVisualAssets(
     if (item.resourceKind === 'image') {
       scene.load.image(item.key, item.path);
       queued.push(item.key);
+    } else if (item.resourceKind === 'tilemap-tiled-json') {
+      scene.load.tilemapTiledJSON(item.key, item.path);
+      queued.push(item.key);
     } else if (item.resourceKind === 'spritesheet') {
       // Validate metadata explicitly before calling scene.load.spritesheet
       // to avoid converting invalid arguments into silent Phaser defaults.

@@ -62,6 +62,10 @@ closeout is named, the source file is the reference.
 - Asset catalog with code-native fallbacks, actor animations, motion queue, responsive layout,
   and a normal / debug presentation toggle.
   Closeout: `docs/PLAYABLE_PRESENTATION_CLOSEOUT_V1.md`.
+- Combat-only modular pixel-art vertical slice at 640x360: integer-scaled rendering, a 16x16
+  Tiled arena, synchronized body/main-hand animation layers, per-cell movement timing, and one
+  profile-data weapon swap. Exploration presentation is unchanged.
+  Closeout: `docs/COMBAT_VISUAL_DIRECTION_VERTICAL_SLICE_CLOSEOUT_V1.md`.
 
 ## Outside the Current MVP
 
@@ -78,7 +82,8 @@ Do not implement these unless the user explicitly asks:
 - Narrative engine, dialogue system, quest system.
 - Save/load.
 - Audio.
-- Production art and complex assets.
+- Production-complete art, a general equipment system, and a paper-doll editor. The current
+  combat art is a narrow CC0 vertical slice only.
 - Lore, setting, factions, places, named characters, or worldbuilding.
 - Official IP, official names, official lore, official texts, official rules text, or official
   art, under the rule in `AGENTS.md`.

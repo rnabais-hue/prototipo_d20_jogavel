@@ -1,6 +1,7 @@
 import { describe, expect, it, afterEach } from 'vitest';
 import {
   getMotionDuration,
+  getCombatMoveDuration,
   isReducedMotion,
   setReducedMotion,
   MOTION_DURATIONS,
@@ -20,6 +21,9 @@ describe('motionConfig', () => {
     expect(getMotionDuration('hitReaction')).toBe(MOTION_DURATIONS.hitReaction);
     expect(getMotionDuration('missEvade')).toBe(MOTION_DURATIONS.missEvade);
     expect(getMotionDuration('combatMove')).toBe(MOTION_DURATIONS.combatMove);
+    expect(getMotionDuration('recovery')).toBe(MOTION_DURATIONS.recovery);
+    expect(getCombatMoveDuration({ x: 0, y: 0 }, { x: 1, y: 0 })).toBe(120);
+    expect(getCombatMoveDuration({ x: 0, y: 0 }, { x: 3, y: 2 })).toBe(600);
     expect(getMotionDuration('defeat')).toBe(MOTION_DURATIONS.defeat);
   });
 
@@ -39,6 +43,8 @@ describe('motionConfig', () => {
     expect(getMotionDuration('hitReaction')).toBe(0);
     expect(getMotionDuration('missEvade')).toBe(0);
     expect(getMotionDuration('combatMove')).toBe(0);
+    expect(getMotionDuration('recovery')).toBe(0);
+    expect(getCombatMoveDuration({ x: 0, y: 0 }, { x: 3, y: 2 })).toBe(0);
     expect(getMotionDuration('defeat')).toBe(0);
   });
 });

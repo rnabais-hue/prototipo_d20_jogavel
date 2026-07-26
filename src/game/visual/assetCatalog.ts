@@ -28,6 +28,12 @@ export type FallbackResource = Readonly<{
   loadByDefault: false;
 }>;
 
+export type TilemapResource = Readonly<{
+  resourceKind: 'tilemap-tiled-json';
+  path: string;
+  loadByDefault: boolean;
+}>;
+
 export type BaseAssetCatalogEntry = Readonly<{
   key: VisualAssetKey;
   kind: VisualAssetKind;
@@ -39,7 +45,8 @@ export type BaseAssetCatalogEntry = Readonly<{
   fallback: 'terrain' | 'obstacle' | 'player' | 'enemy' | 'survey' | 'switch' | 'exit' | 'encounter' | 'effect' | 'icon' | 'panel';
 }>;
 
-export type VisualAssetCatalogEntry = BaseAssetCatalogEntry & (ImageResource | SpritesheetResource | FallbackResource);
+export type VisualAssetCatalogEntry = BaseAssetCatalogEntry &
+  (ImageResource | SpritesheetResource | FallbackResource | TilemapResource);
 
 const center = Object.freeze({ x: 0.5, y: 0.5 });
 const actorAnchor = VISUAL_SCALE.actorAnchor;
@@ -48,6 +55,8 @@ const provenanceRef = 'public/assets/PROVENANCE.md';
 export const VISUAL_ASSET_CATALOG: Readonly<Record<VisualAssetKey, VisualAssetCatalogEntry>> = Object.freeze({
   [VISUAL_ASSET_KEYS.explorationGround]: entry(VISUAL_ASSET_KEYS.explorationGround, 'terrain', '/assets/terrain/exploration/abandoned-temple-floor-e2p1.png', 32, 32, center, 'generated-raster', 'terrain', true),
   [VISUAL_ASSET_KEYS.combatGround]: entry(VISUAL_ASSET_KEYS.combatGround, 'terrain', '/assets/terrain/combat/ruined-sanctuary-floor-c2p1.png', 42, 42, center, 'generated-raster', 'terrain', true),
+  [VISUAL_ASSET_KEYS.combatPixelTiles]: entry(VISUAL_ASSET_KEYS.combatPixelTiles, 'terrain', '/assets/terrain/combat/pixel/combat-dungeon-tiles.png', 64, 16, center, 'permissive-external', 'terrain', true),
+  [VISUAL_ASSET_KEYS.combatArenaMap]: tilemapEntry(VISUAL_ASSET_KEYS.combatArenaMap, '/assets/terrain/combat/pixel/combat-arena.json'),
   [VISUAL_ASSET_KEYS.wallObstacle]: entry(VISUAL_ASSET_KEYS.wallObstacle, 'obstacle', '/assets/world/obstacles/A4-wall-W1R1-master.png', 32, 32, center, 'generated-raster', 'obstacle', true),
   [VISUAL_ASSET_KEYS.playerActor]: actorSheet(VISUAL_ASSET_KEYS.playerActor, '/assets/actors/player/A7-player-idle-3f-256.png', 'player'),
   [VISUAL_ASSET_KEYS.playerActorMovement]: actorSheet(VISUAL_ASSET_KEYS.playerActorMovement, '/assets/actors/player/A7-player-movement-3f-256.png', 'player'),
@@ -58,6 +67,11 @@ export const VISUAL_ASSET_CATALOG: Readonly<Record<VisualAssetKey, VisualAssetCa
   [VISUAL_ASSET_KEYS.enemyActorAttack]: actorSheet(VISUAL_ASSET_KEYS.enemyActorAttack, '/assets/actors/enemies/A7-enemy-attack-3f-256.png', 'enemy'),
   [VISUAL_ASSET_KEYS.enemyActorHit]: actorSheet(VISUAL_ASSET_KEYS.enemyActorHit, '/assets/actors/enemies/A7-enemy-hit-3f-256.png', 'enemy'),
   [VISUAL_ASSET_KEYS.enemyActorDefeat]: actorSheet(VISUAL_ASSET_KEYS.enemyActorDefeat, '/assets/actors/enemies/A7-enemy-defeat-3f-256.png', 'enemy'),
+  [VISUAL_ASSET_KEYS.combatPlayerBody]: pixelActorSheet(VISUAL_ASSET_KEYS.combatPlayerBody, '/assets/actors/combat/player/combat-player-body.png', 'player'),
+  [VISUAL_ASSET_KEYS.combatPlayerMainHandSword]: pixelActorSheet(VISUAL_ASSET_KEYS.combatPlayerMainHandSword, '/assets/actors/combat/player/combat-player-main-hand-sword.png', 'player'),
+  [VISUAL_ASSET_KEYS.combatPlayerMainHandSpear]: pixelActorSheet(VISUAL_ASSET_KEYS.combatPlayerMainHandSpear, '/assets/actors/combat/player/combat-player-main-hand-spear.png', 'player'),
+  [VISUAL_ASSET_KEYS.combatEnemyBody]: pixelActorSheet(VISUAL_ASSET_KEYS.combatEnemyBody, '/assets/actors/combat/enemy/combat-enemy-body.png', 'enemy'),
+  [VISUAL_ASSET_KEYS.combatEnemyMainHandAxe]: pixelActorSheet(VISUAL_ASSET_KEYS.combatEnemyMainHandAxe, '/assets/actors/combat/enemy/combat-enemy-main-hand-axe.png', 'enemy'),
   [VISUAL_ASSET_KEYS.surveyPoint]: entry(VISUAL_ASSET_KEYS.surveyPoint, 'point-of-interest', null, 18, 18, center, 'repository-graphics', 'survey'),
   [VISUAL_ASSET_KEYS.switchPoint]: createSpritesheetEntry(VISUAL_ASSET_KEYS.switchPoint, 'point-of-interest', '/assets/world/points-of-interest/A4-switch-S1R1-spritesheet.png', 18, 18, center, 'generated-raster', 'switch', { frameWidth: 144, frameHeight: 144 }, true),
   [VISUAL_ASSET_KEYS.exitPoint]: createSpritesheetEntry(VISUAL_ASSET_KEYS.exitPoint, 'point-of-interest', '/assets/world/points-of-interest/A4-exit-X1R1-spritesheet.png', 24, 24, center, 'generated-raster', 'exit', { frameWidth: 192, frameHeight: 192 }, true),
@@ -134,6 +148,44 @@ function actorSheet(
     { frameWidth: 256, frameHeight: 256, startFrame: 0, endFrame: 2 },
     true,
   );
+}
+
+function pixelActorSheet(
+  key: VisualAssetKey,
+  path: string,
+  fallback: 'player' | 'enemy',
+): VisualAssetCatalogEntry {
+  return createSpritesheetEntry(
+    key,
+    'actor',
+    path,
+    32,
+    32,
+    Object.freeze({ x: 0.5, y: 0.9375 }),
+    'permissive-external',
+    fallback,
+    { frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 19 },
+    true,
+  );
+}
+
+function tilemapEntry(
+  key: VisualAssetKey,
+  path: string,
+): VisualAssetCatalogEntry {
+  return Object.freeze({
+    key,
+    kind: 'terrain',
+    path,
+    resourceKind: 'tilemap-tiled-json',
+    loadByDefault: true,
+    logicalWidth: 12 * 16,
+    logicalHeight: 10 * 16,
+    anchor: center,
+    source: 'repository-graphics',
+    provenanceRef,
+    fallback: 'terrain',
+  });
 }
 
 export function createSpritesheetEntry(
@@ -249,7 +301,7 @@ export function validateVisualAssetCatalog(
     }
 
     // Resource kind validation
-    if (item.resourceKind === 'image') {
+    if (item.resourceKind === 'image' || item.resourceKind === 'tilemap-tiled-json') {
       const itemObj = item as Record<string, unknown>;
       if (
         itemObj.frameWidth !== undefined ||

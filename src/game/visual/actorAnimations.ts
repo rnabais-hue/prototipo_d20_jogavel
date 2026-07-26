@@ -1,9 +1,20 @@
 import Phaser from 'phaser';
 import { VISUAL_ASSET_KEYS, type VisualAssetKey } from './assetKeys';
 import { isReducedMotion } from './motionConfig';
+import {
+  COMBAT_APPEARANCE_PROFILES,
+  getCombatAppearanceAnimation,
+  resolveCombatAppearanceLayers,
+  type CombatAppearanceLayerSlot,
+  type CombatAppearanceProfile,
+  type CombatAppearanceState,
+} from './combatAppearanceProfiles';
 
 export type ActorAnimationRole = 'player' | 'enemy';
 export type ActorAnimationState = 'idle' | 'movement' | 'attack' | 'hit' | 'defeat';
+export type CombatAppearanceSpriteLayers = Partial<
+  Record<CombatAppearanceLayerSlot, Phaser.GameObjects.Sprite>
+>;
 
 type ActorAnimationDefinition = Readonly<{
   role: ActorAnimationRole;
@@ -50,6 +61,93 @@ export function createActorAnimations(scene: Phaser.Scene): void {
       repeat: definition.repeat,
     });
   }
+
+  for (const profile of Object.values(COMBAT_APPEARANCE_PROFILES)) {
+    for (const state of Object.keys(COMBAT_APPEARANCE_ANIMATIONS) as CombatAppearanceState[]) {
+      for (const definition of buildCombatLayerAnimationDefinitions(profile, state)) {
+        if (!scene.textures.exists(definition.textureKey)) continue;
+        if (scene.anims.exists(definition.animationKey)) continue;
+        scene.anims.create({
+          key: definition.animationKey,
+          frames: definition.frames.map((frame) => ({
+            key: definition.textureKey,
+            frame,
+          })),
+          duration: definition.duration,
+          repeat: definition.repeat,
+        });
+      }
+    }
+  }
+}
+
+const COMBAT_APPEARANCE_ANIMATIONS = Object.freeze({
+  idle: true,
+  movement: true,
+  attack: true,
+  hit: true,
+  defeat: true,
+} satisfies Record<CombatAppearanceState, true>);
+
+export type CombatLayerAnimationDefinition = Readonly<{
+  slot: CombatAppearanceLayerSlot;
+  textureKey: VisualAssetKey;
+  animationKey: string;
+  frames: readonly number[];
+  duration: number;
+  repeat: number;
+}>;
+
+export function getCombatLayerAnimationKey(
+  profileId: string,
+  slot: CombatAppearanceLayerSlot,
+  state: CombatAppearanceState,
+): string {
+  return `visual.animation.combat.${profileId}.${slot}.${state}`;
+}
+
+export function buildCombatLayerAnimationDefinitions(
+  profile: CombatAppearanceProfile,
+  state: CombatAppearanceState,
+): readonly CombatLayerAnimationDefinition[] {
+  const animation = getCombatAppearanceAnimation(state);
+  return resolveCombatAppearanceLayers(profile).map(({ slot, textureKey }) =>
+    Object.freeze({
+      slot,
+      textureKey,
+      animationKey: getCombatLayerAnimationKey(profile.id, slot, state),
+      frames: animation.frames,
+      duration: animation.duration,
+      repeat: animation.repeat,
+    }),
+  );
+}
+
+export function playCombatAppearanceAnimation(
+  scene: Phaser.Scene,
+  sprites: CombatAppearanceSpriteLayers,
+  profile: CombatAppearanceProfile,
+  state: CombatAppearanceState,
+): boolean {
+  const definitions = buildCombatLayerAnimationDefinitions(profile, state);
+  let played = false;
+  for (const definition of definitions) {
+    const sprite = sprites[definition.slot];
+    if (!sprite) continue;
+    if (isReducedMotion()) {
+      sprite.stop();
+      sprite.setTexture(
+        definition.textureKey,
+        definition.frames[definition.frames.length - 1],
+      );
+      played = true;
+      continue;
+    }
+    if (!scene.anims.exists(definition.animationKey)) continue;
+    sprite.play(definition.animationKey, true);
+    played = true;
+  }
+  return played;
 }
 
 export function playActorAnimation(

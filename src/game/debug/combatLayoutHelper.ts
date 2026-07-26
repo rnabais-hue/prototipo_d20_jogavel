@@ -68,50 +68,40 @@ export interface CombatLayout {
  * combat console panel, HP bars, turn indicator, diagnostics overlays, and exploration
  * elements from the current viewport dimensions.
  *
- * It ensures that:
- * 1. The combat grid ends above the console panel with a visible gap (min 12px / 8px).
- * 2. All text layouts, diagnostic boxes, and HUD components remain fully readable.
- * 3. Incorporates a deterministic degradation strategy for debug mode at smaller heights.
+ * Combat uses a fixed 32-pixel cell so a 16-pixel tileset can always be rendered
+ * at an integer 2x scale. The arena and command console occupy separate columns
+ * inside the 640x360 logical canvas.
  */
 export function calculateCombatLayout(width: number, height: number): CombatLayout {
   const cols = 10;
   const rows = 8;
   const isSmallHeight = height < 420;
   const padding = width < 700 ? 12 : 16;
+  const logicalFrameWidth = 640;
+  const frameOffsetX = Math.max(0, Math.floor((width - logicalFrameWidth) / 2));
 
-  // HP Bars:
-  const barWidth = width < 700 ? 150 : 200;
+  // Combat status lives in the side panel so it never covers the arena.
+  const barWidth = 220;
   const barHeight = 12;
-  const hpBarY = isSmallHeight ? 24 : 28;
+  const playerHpBarY = 92;
+  const opponentHpBarY = 124;
 
-  // Turn Indicator:
-  const turnY = isSmallHeight ? 42 : 48;
+  const consoleWidth = 236;
+  const consoleX = frameOffsetX + 392;
+  const consoleHeight = 280;
+  const consoleY = 64;
 
-  // Console panel geometry
-  const consoleWidth = Math.min(560, width - 2 * padding);
-  const consoleX = (width - consoleWidth) / 2;
-  const consoleHeight = 144;
-  const consoleMarginBottom = isSmallHeight ? 12 : 24;
-  const consoleY = height - consoleHeight - consoleMarginBottom;
-
-  // Grid
-  const originY = isSmallHeight ? 80 : 92;
-  const gridConsoleGap = isSmallHeight ? 8 : 12;
-  
-  const maxCellSizeX = (width - 2 * padding) / cols;
-  const availableHeight = consoleY - gridConsoleGap - originY;
-  const maxCellSizeY = availableHeight / rows;
-  const cellSize = Math.max(8, Math.min(42, maxCellSizeX, maxCellSizeY));
-
+  const originY = 52;
+  const cellSize = 32;
   const gridWidth = cols * cellSize;
   const gridHeight = rows * cellSize;
-  const originX = (width - gridWidth) / 2;
+  const originX = frameOffsetX + 32;
 
   // Console offsets
   const historyX = consoleX + 8;
-  const historyY = consoleY + 6;
+  const historyY = consoleY + 88;
   const promptsX = consoleX + 8;
-  const promptsNormalY = consoleY + consoleHeight - 18;
+  const promptsNormalY = consoleY + consoleHeight - 38;
   const promptsAttacksY = consoleY + consoleHeight - 68;
 
   // --- Combat HUD Diagnostics Placement & Degradation Policy ---
@@ -193,12 +183,12 @@ export function calculateCombatLayout(width: number, height: number): CombatLayo
       promptsAttacksY,
     },
     hpBars: {
-      player: { x: padding, y: hpBarY, width: barWidth, height: barHeight },
-      opponent: { x: width - padding - barWidth, y: hpBarY, width: barWidth, height: barHeight },
+      player: { x: frameOffsetX + 400, y: playerHpBarY, width: barWidth, height: barHeight },
+      opponent: { x: frameOffsetX + 400, y: opponentHpBarY, width: barWidth, height: barHeight },
     },
     turnIndicator: {
-      x: width / 2,
-      y: turnY,
+      x: frameOffsetX + 510,
+      y: 16,
     },
     hud: {
       objective: { x: width - padding, y: objectiveY, width: hudWidth, visible: objectiveVisible, originX: 1 },

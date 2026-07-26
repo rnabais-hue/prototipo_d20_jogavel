@@ -11,20 +11,49 @@ import {
   COMBAT_TOKEN_CONFIG,
 } from './combatVisualConfig';
 import { COMBAT_LAYER_DEPTHS } from './combatLayerDepths';
-import { VISUAL_ASSET_KEYS } from './assetKeys';
 import { getVisualAssetEntry } from './assetCatalog';
 import { resolveVisualAsset } from './assetAvailability';
-import { playActorAnimation } from './actorAnimations';
+import {
+  playCombatAppearanceAnimation,
+  type CombatAppearanceSpriteLayers,
+} from './actorAnimations';
+import {
+  resolveCombatAppearanceLayers,
+  resolveCombatAppearanceProfile,
+  type CombatAppearanceLayerSlot,
+  type CombatAppearanceProfile,
+} from './combatAppearanceProfiles';
 
-const ACTOR_SPRITE_NAME = 'actor-spritesheet';
+const ACTOR_LAYER_NAME_PREFIX = 'actor-layer-';
 
 export function getCombatantActorSprite(
   container: Phaser.GameObjects.Container,
 ): Phaser.GameObjects.Sprite | undefined {
+  return getCombatantActorSprites(container).body;
+}
+
+export function getCombatantActorSprites(
+  container: Phaser.GameObjects.Container,
+): CombatAppearanceSpriteLayers {
   const getByName = (container as Phaser.GameObjects.Container & {
     getByName?: (name: string) => Phaser.GameObjects.GameObject | null;
   }).getByName;
-  return getByName?.call(container, ACTOR_SPRITE_NAME) as Phaser.GameObjects.Sprite | undefined;
+  const sprites: CombatAppearanceSpriteLayers = {};
+  const slots: readonly CombatAppearanceLayerSlot[] = [
+    'body',
+    'outfit',
+    'mainHand',
+    'offHand',
+    'accessory',
+  ];
+  for (const slot of slots) {
+    const sprite = getByName?.call(
+      container,
+      `${ACTOR_LAYER_NAME_PREFIX}${slot}`,
+    ) as Phaser.GameObjects.Sprite | undefined;
+    if (sprite) sprites[slot] = sprite;
+  }
+  return sprites;
 }
 
 export type CombatantViewOptions = {
@@ -34,6 +63,7 @@ export type CombatantViewOptions = {
   world: { x: number; y: number };
   cellSize: number;
   isTarget: boolean;
+  appearanceProfile?: CombatAppearanceProfile;
 };
 
 export function getCombatantDisplaySize(
@@ -111,20 +141,47 @@ export function drawCombatantToken(
   }
 
   // Dynamic asset catalog resolution
-  const assetKey = isPlayer ? VISUAL_ASSET_KEYS.playerActor : VISUAL_ASSET_KEYS.enemyActor;
-  const entry = getVisualAssetEntry(assetKey);
-  const resolution = resolveVisualAsset(entry, (key) => scene.textures.exists(key));
+  const appearanceProfile =
+    options.appearanceProfile ?? resolveCombatAppearanceProfile(role);
+  const bodyEntry = getVisualAssetEntry(appearanceProfile.body);
+  const bodyResolution = resolveVisualAsset(
+    bodyEntry,
+    (key) => scene.textures.exists(key),
+  );
 
-  if (resolution.mode === 'texture') {
-    const sprite = scene.add.sprite(world.x, world.y, entry.key);
-    sprite.setName(ACTOR_SPRITE_NAME);
-    sprite.setOrigin(entry.anchor.x, entry.anchor.y);
-    const displaySize = getCombatantDisplaySize(sprite.width, sprite.height, radius * 2);
-    sprite.setDisplaySize(displaySize.width, displaySize.height);
-    playActorAnimation(scene, sprite, role, 'idle');
+  if (bodyResolution.mode === 'texture') {
+    const shadow = scene.add.graphics();
+    shadow
+      .fillStyle(0x000000, 0.35)
+      .fillEllipse(world.x, world.y + 2, 24, 8);
+    container.add(shadow);
+
+    const sprites: CombatAppearanceSpriteLayers = {};
+    for (const layer of resolveCombatAppearanceLayers(appearanceProfile)) {
+      const entry = getVisualAssetEntry(layer.textureKey);
+      const resolution = resolveVisualAsset(
+        entry,
+        (key) => scene.textures.exists(key),
+      );
+      if (resolution.mode !== 'texture') continue;
+      const sprite = scene.add.sprite(world.x, world.y, entry.key);
+      sprite.setName(`${ACTOR_LAYER_NAME_PREFIX}${layer.slot}`);
+      sprite.setOrigin(appearanceProfile.anchor.x, appearanceProfile.anchor.y);
+      sprite.setScale(appearanceProfile.displayScale);
+      if (defeated) {
+        sprite.setTint(COMBAT_VISUAL_COLORS.defeatedOverlay);
+      }
+      sprites[layer.slot] = sprite;
+      container.add(sprite);
+    }
+    playCombatAppearanceAnimation(
+      scene,
+      sprites,
+      appearanceProfile,
+      defeated ? 'defeat' : 'idle',
+    );
 
     if (defeated) {
-      sprite.setTint(COMBAT_VISUAL_COLORS.defeatedOverlay);
       // Gray X overlay
       const token = scene.add.graphics();
       const xLen = radius * 0.55;
@@ -133,7 +190,6 @@ export function drawCombatantToken(
       token.lineBetween(world.x + xLen, world.y - xLen, world.x - xLen, world.y + xLen);
       container.add(token);
     }
-    container.add(sprite);
   } else {
     // Token body
     const token = scene.add.graphics();

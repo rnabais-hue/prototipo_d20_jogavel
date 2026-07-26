@@ -24,13 +24,13 @@ function createSceneHarness() {
   return { scene, created };
 }
 
-describe('A7 actor animations', () => {
-  it('registers only the nine approved player and enemy states', () => {
+describe('actor animations', () => {
+  it('registers legacy states and synchronized modular combat layers', () => {
     const { scene, created } = createSceneHarness();
 
     createActorAnimations(scene);
 
-    expect(created.size).toBe(9);
+    expect(created.size).toBe(39);
     expect(created.has(getActorAnimationKey('player', 'movement'))).toBe(true);
     expect([...created.keys()].some((key) => key.includes('enemy.movement'))).toBe(false);
     expect(created.get(getActorAnimationKey('player', 'attack'))).toMatchObject({
@@ -50,7 +50,7 @@ describe('A7 actor animations', () => {
     createActorAnimations(scene);
     createActorAnimations(scene);
 
-    expect(scene.anims.create).toHaveBeenCalledTimes(9);
+    expect(scene.anims.create).toHaveBeenCalledTimes(39);
     expect(playActorAnimation(scene, sprite, 'enemy', 'hit')).toBe(true);
     expect(sprite.play).toHaveBeenCalledWith(
       getActorAnimationKey('enemy', 'hit'),
