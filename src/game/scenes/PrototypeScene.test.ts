@@ -12,16 +12,32 @@ describe('PrototypeScene visual asset preload boundary', () => {
   it('queues approved assets but not revision-requested A6 UI candidates', () => {
     const image = vi.fn();
     const spritesheet = vi.fn();
+    const tilemapTiledJSON = vi.fn();
     const scene = {
       load: {
         image,
         spritesheet,
+        tilemapTiledJSON,
       },
     } as unknown as PrototypeScene;
 
     PrototypeScene.prototype.preload.call(scene);
 
-    expect(image.mock.calls).toEqual([
+    expect(tilemapTiledJSON).toHaveBeenCalledWith(
+      VISUAL_ASSET_KEYS.combatArenaMap,
+      '/assets/terrain/combat/pixel/combat-arena.json',
+    );
+    expect(image).toHaveBeenCalledWith(
+      VISUAL_ASSET_KEYS.combatPixelTiles,
+      '/assets/terrain/combat/pixel/combat-dungeon-tiles.png',
+    );
+    expect(spritesheet).toHaveBeenCalledWith(
+      VISUAL_ASSET_KEYS.combatPlayerBody,
+      '/assets/actors/combat/player/combat-player-body.png',
+      { frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 19 },
+    );
+
+    expect(image.mock.calls).toEqual(expect.arrayContaining([
       [
         VISUAL_ASSET_KEYS.explorationGround,
         '/assets/terrain/exploration/abandoned-temple-floor-e2p1.png',
@@ -29,6 +45,10 @@ describe('PrototypeScene visual asset preload boundary', () => {
       [
         VISUAL_ASSET_KEYS.combatGround,
         '/assets/terrain/combat/ruined-sanctuary-floor-c2p1.png',
+      ],
+      [
+        VISUAL_ASSET_KEYS.combatPixelTiles,
+        '/assets/terrain/combat/pixel/combat-dungeon-tiles.png',
       ],
       [
         VISUAL_ASSET_KEYS.wallObstacle,
@@ -50,9 +70,9 @@ describe('PrototypeScene visual asset preload boundary', () => {
         VISUAL_ASSET_KEYS.defeatEffect,
         '/assets/effects/defeat/A5-defeat-effect.png',
       ],
-    ]);
+    ]));
 
-    expect(spritesheet.mock.calls).toEqual([
+    expect(spritesheet.mock.calls).toEqual(expect.arrayContaining([
       [
         VISUAL_ASSET_KEYS.playerActor,
         '/assets/actors/player/A7-player-idle-3f-256.png',
@@ -108,6 +128,6 @@ describe('PrototypeScene visual asset preload boundary', () => {
         '/assets/world/points-of-interest/A4-exit-X1R1-spritesheet.png',
         { frameWidth: 192, frameHeight: 192 },
       ],
-    ]);
+    ]));
   });
 });

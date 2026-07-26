@@ -2,10 +2,16 @@ import Phaser from 'phaser';
 import type { GridCell } from '../../movement/grid';
 import type { DebugCombatGridLayout } from '../debug/debugCombatGridProjection';
 import { projectCombatCellToWorld } from '../debug/debugCombatGridProjection';
-import { drawCombatantToken, getCombatantActorSprite } from './createCombatantView';
+import { drawCombatantToken, getCombatantActorSprites } from './createCombatantView';
 import { COMBAT_LAYER_DEPTHS } from './combatLayerDepths';
 import { getMotionDuration } from './motionConfig';
-import { playActorAnimation, type ActorAnimationState } from './actorAnimations';
+import { playCombatAppearanceAnimation } from './actorAnimations';
+import {
+  getRequestedCombatAppearanceId,
+  resolveCombatAppearanceProfile,
+  type CombatAppearanceProfile,
+  type CombatAppearanceState,
+} from './combatAppearanceProfiles';
 
 export interface CombatantViewHandle {
   readonly participantId: string;
@@ -19,6 +25,7 @@ export interface CombatantViewHandle {
   animatePresentationPosition(targetWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   playAnticipation(targetWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   playLunge(targetWorld: { x: number; y: number }, duration: number): void;
+  playRecovery(duration: number, onComplete?: () => void): void;
   playHitReaction(attackerWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   playMissReaction(attackerWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   prepareForDefeatAnimation(): void;
@@ -34,12 +41,19 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
   readonly isPlayer: boolean;
   private scene: Phaser.Scene;
   private lastPresentationOptions?: { active: boolean; defeated: boolean; isTarget: boolean; cellSize: number };
+  private readonly appearanceProfile: CombatAppearanceProfile;
   activeTweens: Phaser.Tweens.Tween[] = [];
 
   constructor(scene: Phaser.Scene, participantId: string, isPlayer: boolean) {
     this.scene = scene;
     this.participantId = participantId;
     this.isPlayer = isPlayer;
+    const role = isPlayer ? 'player' : 'enemy';
+    const search = typeof window === 'undefined' ? '' : window.location.search;
+    this.appearanceProfile = resolveCombatAppearanceProfile(
+      role,
+      getRequestedCombatAppearanceId(search, role),
+    );
 
     // Create the container at (0, 0) initially
     this.container = scene.add
@@ -65,11 +79,11 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     return tween;
   }
 
-  private playFrameAnimation(state: ActorAnimationState): boolean {
-    return playActorAnimation(
+  private playFrameAnimation(state: CombatAppearanceState): boolean {
+    return playCombatAppearanceAnimation(
       this.scene,
-      getCombatantActorSprite(this.container),
-      this.isPlayer ? 'player' : 'enemy',
+      getCombatantActorSprites(this.container),
+      this.appearanceProfile,
       state,
     );
   }
@@ -83,16 +97,20 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       return;
     }
 
-    if (this.isPlayer) {
-      this.playFrameAnimation('movement');
-    }
+    this.playFrameAnimation('movement');
 
     this.addTween({
       targets: this.container,
       x: targetWorld.x,
       y: targetWorld.y,
       duration: duration,
-      ease: 'Cubic.easeOut',
+      ease: 'Linear',
+      onUpdate: () => {
+        this.container.setPosition(
+          Math.round(this.container.x),
+          Math.round(this.container.y),
+        );
+      },
       onComplete: () => {
         this.playFrameAnimation('idle');
         onComplete?.();
@@ -125,18 +143,22 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     const ux = len > 0.01 ? dx / len : 1;
     const uy = len > 0.01 ? dy / len : 0;
 
-    const anticDist = 15;
-    const anticX = startX - ux * anticDist;
-    const anticY = startY - uy * anticDist;
+    const anticDist = 6;
+    const anticX = Math.round(startX - ux * anticDist);
+    const anticY = Math.round(startY - uy * anticDist);
 
     this.addTween({
       targets: this.container,
       x: anticX,
       y: anticY,
-      scaleY: 0.85,
-      scaleX: 1.1,
       duration: duration,
-      ease: 'Back.easeOut',
+      ease: 'Linear',
+      onUpdate: () => {
+        this.container.setPosition(
+          Math.round(this.container.x),
+          Math.round(this.container.y),
+        );
+      },
       onComplete: () => {
         onComplete?.();
       },
@@ -155,32 +177,52 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     const ux = len > 0.01 ? dx / len : 1;
     const uy = len > 0.01 ? dy / len : 0;
 
-    const lungeDist = 25;
-    const lungeX = hX + ux * lungeDist;
-    const lungeY = hY + uy * lungeDist;
+    const lungeDist = 12;
+    const lungeX = Math.round(hX + ux * lungeDist);
+    const lungeY = Math.round(hY + uy * lungeDist);
 
     this.addTween({
       targets: this.container,
       x: lungeX,
       y: lungeY,
-      scaleY: 1.1,
-      scaleX: 0.85,
       duration: duration * 0.5,
-      ease: 'Cubic.easeOut',
+      ease: 'Linear',
+      onUpdate: () => {
+        this.container.setPosition(
+          Math.round(this.container.x),
+          Math.round(this.container.y),
+        );
+      },
       onComplete: () => {
         this.addTween({
           targets: this.container,
-          x: hX,
-          y: hY,
-          scaleX: 1,
-          scaleY: 1,
+          x: Math.round(hX),
+          y: Math.round(hY),
           duration: duration * 0.5,
-          ease: 'Quad.easeInOut',
-          onComplete: () => {
-            this.playFrameAnimation('idle');
+          ease: 'Linear',
+          onUpdate: () => {
+            this.container.setPosition(
+              Math.round(this.container.x),
+              Math.round(this.container.y),
+            );
           },
         });
       }
+    });
+  }
+
+  playRecovery(duration: number, onComplete?: () => void): void {
+    this.playFrameAnimation('idle');
+    if (duration <= 0) {
+      onComplete?.();
+      return;
+    }
+    this.addTween({
+      targets: this.container,
+      alpha: 1,
+      duration,
+      ease: 'Linear',
+      onComplete,
     });
   }
 
@@ -202,11 +244,9 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     const ux = len > 0.01 ? dx / len : 1;
     const uy = len > 0.01 ? dy / len : 0;
 
-    const pushDist = 12;
-    const pushX = startX + ux * pushDist;
-    const pushY = startY + uy * pushDist;
-
-    this.container.setScale(1.2);
+    const pushDist = 6;
+    const pushX = Math.round(startX + ux * pushDist);
+    const pushY = Math.round(startY + uy * pushDist);
     
     this.addTween({
       targets: this.container,
@@ -214,11 +254,16 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       y: pushY,
       alpha: 0.6,
       duration: duration / 2,
-      ease: 'Cubic.easeOut',
+      ease: 'Linear',
       yoyo: true,
       repeat: 0,
+      onUpdate: () => {
+        this.container.setPosition(
+          Math.round(this.container.x),
+          Math.round(this.container.y),
+        );
+      },
       onComplete: () => {
-        this.container.setScale(1);
         this.container.setAlpha(1);
         this.container.setPosition(startX, startY);
         this.playFrameAnimation('idle');
@@ -248,18 +293,24 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     const px = -uy;
     const py = ux;
 
-    const evadeDist = 20;
-    const evadeX = startX + px * evadeDist;
-    const evadeY = startY + py * evadeDist;
+    const evadeDist = 8;
+    const evadeX = Math.round(startX + px * evadeDist);
+    const evadeY = Math.round(startY + py * evadeDist);
 
     this.addTween({
       targets: this.container,
       x: evadeX,
       y: evadeY,
       duration: duration / 2,
-      ease: 'Cubic.easeOut',
+      ease: 'Linear',
       yoyo: true,
       repeat: 0,
+      onUpdate: () => {
+        this.container.setPosition(
+          Math.round(this.container.x),
+          Math.round(this.container.y),
+        );
+      },
       onComplete: () => {
         this.container.setPosition(startX, startY);
         onComplete?.();
@@ -281,6 +332,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       world: { x: 0, y: 0 },
       cellSize: options.cellSize,
       isTarget: options.isTarget,
+      appearanceProfile: this.appearanceProfile,
     });
   }
 
@@ -288,7 +340,6 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
     this.cancelActiveTweens();
 
     if (duration <= 0) {
-      this.container.setScale(0);
       this.container.setAlpha(0);
       onComplete?.();
       return;
@@ -301,7 +352,6 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
         duration,
         ease: 'Linear',
         onComplete: () => {
-          this.container.setScale(0);
           this.container.setAlpha(0);
           onComplete?.();
         },
@@ -355,6 +405,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       world: { x: 0, y: 0 },
       cellSize: options.cellSize,
       isTarget: options.isTarget,
+      appearanceProfile: this.appearanceProfile,
     });
   }
 

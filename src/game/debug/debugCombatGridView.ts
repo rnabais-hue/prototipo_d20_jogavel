@@ -20,7 +20,7 @@ import {
   getCombatSessionLife,
 } from '../../combat/combatSession';
 import type { GridCell } from '../../movement/grid';
-import { getMotionDuration } from '../visual/motionConfig';
+import { getCombatMoveDuration } from '../visual/motionConfig';
 
 // Presentation state the caller passes each frame.
 export type DebugCombatGridPresentationState = {
@@ -165,7 +165,7 @@ export function createDebugCombatGridView(
             isTarget,
             cellSize: layout.cellSize,
           }, true);
-          const moveDuration = getMotionDuration('combatMove');
+          const moveDuration = getCombatMoveDuration(lastCell!, combatant.cell);
           handle.animatePresentationPosition(world, moveDuration);
         } else {
           // Maintain drawing options while keeping animated position

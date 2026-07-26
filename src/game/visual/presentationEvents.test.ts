@@ -114,7 +114,7 @@ describe('presentationEvents mapping', () => {
 
     const events = mapAttackToEvents(mockAttack, 'team-player', false);
 
-    expect(events.length).toBe(2);
+    expect(events.length).toBe(3);
     expect(events[0]).toEqual({
       type: 'attack_anticipation',
       attackerId: 'attacker-1',
@@ -127,6 +127,10 @@ describe('presentationEvents mapping', () => {
       targetId: 'target-1',
       damageAmount: 5,
       isDefeated: false,
+    });
+    expect(events[2]).toEqual({
+      type: 'attack_recovery',
+      attackerId: 'attacker-1',
     });
   });
 
@@ -189,7 +193,7 @@ describe('presentationEvents mapping', () => {
 
     const events = mapAttackToEvents(mockAttack, 'team-player', false);
 
-    expect(events.length).toBe(2);
+    expect(events.length).toBe(3);
     expect(events[0]).toEqual({
       type: 'attack_anticipation',
       attackerId: 'attacker-1',
@@ -201,9 +205,13 @@ describe('presentationEvents mapping', () => {
       attackerId: 'attacker-1',
       targetId: 'target-1',
     });
+    expect(events[2]).toEqual({
+      type: 'attack_recovery',
+      attackerId: 'attacker-1',
+    });
   });
 
-  it('maps a fatal hit to hit + defeat + outcome events correctly', () => {
+  it('maps a fatal hit to contact + recovery + defeat + outcome in order', () => {
     const mockAttack: CombatSessionResolvedAttack = {
       ok: true,
       attacker: createMockSheet('attacker-1', 'Hero', 'team-player', 10),
@@ -263,7 +271,7 @@ describe('presentationEvents mapping', () => {
 
     const events = mapAttackToEvents(mockAttack, 'team-player', true);
 
-    expect(events.length).toBe(4);
+    expect(events.length).toBe(5);
     expect(events[0].type).toBe('attack_anticipation');
     expect(events[1]).toEqual({
       type: 'attack_hit',
@@ -273,10 +281,14 @@ describe('presentationEvents mapping', () => {
       isDefeated: true,
     });
     expect(events[2]).toEqual({
+      type: 'attack_recovery',
+      attackerId: 'attacker-1',
+    });
+    expect(events[3]).toEqual({
       type: 'combatant_defeated',
       participantId: 'target-1',
     });
-    expect(events[3]).toEqual({
+    expect(events[4]).toEqual({
       type: 'combat_outcome',
       status: 'victory',
     });

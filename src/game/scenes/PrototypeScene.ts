@@ -757,8 +757,8 @@ export class PrototypeScene extends Phaser.Scene {
         } else {
           if (this.combatMenuState === 'main') {
             promptText = this.combatSession.encounter.activeTurn.mainActionAvailable
-              ? `[1]      Attacks    [2]      Abilities    [3]      End Turn    Move:      ${getCombatSessionRemainingMovement(this.combatSession)}/4`
-              : `Main action used   [3]      End Turn    Move:      ${getCombatSessionRemainingMovement(this.combatSession)}/4`;
+              ? `[1] Attacks    [2] Abilities\n[3] End Turn    Move: ${getCombatSessionRemainingMovement(this.combatSession)}/4`
+              : `Main action used\n[3] End Turn    Move: ${getCombatSessionRemainingMovement(this.combatSession)}/4`;
             this.combatConsolePromptsText?.setVisible(true).setText(promptText);
             this.combatMenuView?.setVisible(false);
           } else if (this.combatMenuState === 'attacks') {
@@ -1199,12 +1199,26 @@ export class PrototypeScene extends Phaser.Scene {
     }
 
     if (this.combatConsoleHistoryText) {
-      this.combatConsoleHistoryText.setPosition(layout.console.historyX, layout.console.historyY);
+      this.combatConsoleHistoryText
+        .setPosition(layout.console.historyX, layout.console.historyY)
+        .setStyle({
+          wordWrap: {
+            width: layout.console.width - 16,
+            useAdvancedWrap: true,
+          },
+        });
     }
 
     if (this.combatConsolePromptsText) {
       const promptsY = this.combatMenuState === 'attacks' ? layout.console.promptsAttacksY : layout.console.promptsNormalY;
-      this.combatConsolePromptsText.setPosition(layout.console.promptsX, promptsY);
+      this.combatConsolePromptsText
+        .setPosition(layout.console.promptsX, promptsY)
+        .setStyle({
+          wordWrap: {
+            width: layout.console.width - 16,
+            useAdvancedWrap: true,
+          },
+        });
       this.updatePromptIcons(layout);
     }
 
@@ -1231,7 +1245,9 @@ export class PrototypeScene extends Phaser.Scene {
     }
 
     if (this.titleText) {
-      this.titleText.setPosition(width / 2, height < 420 ? 20 : 24);
+      this.titleText
+        .setPosition(width / 2, height < 420 ? 20 : 24)
+        .setVisible(this.mode === 'exploration');
     }
 
     if (this.debugLegendContainer) {

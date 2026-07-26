@@ -17,7 +17,7 @@ import {
 import { VISUAL_ASSET_KEYS } from './assetKeys';
 import { getVisualAssetEntry } from './assetCatalog';
 import { resolveVisualAsset } from './assetAvailability';
-import { getCombatGroundTileScale } from './createCombatArenaView';
+import { getCombatTileScale } from './createCombatArenaView';
 import { getCombatantDisplaySize } from './createCombatantView';
 
 // -- Layer depth ordering --------------------------------------------------
@@ -287,15 +287,11 @@ describe('Combat asset catalog integration', () => {
     expect(resolution.reason).toBe('not-loaded');
   });
 
-  it('should scale the combat master to exactly one current grid cell', () => {
-    expect(getCombatGroundTileScale(1254, 1254, 42)).toEqual({
-      x: 42 / 1254,
-      y: 42 / 1254,
-    });
-    expect(getCombatGroundTileScale(1254, 1254, 14.5)).toEqual({
-      x: 14.5 / 1254,
-      y: 14.5 / 1254,
-    });
+  it('uses integer scaling for native 16-pixel combat tiles', () => {
+    expect(getCombatTileScale(32)).toBe(2);
+    expect(getCombatTileScale(48)).toBe(3);
+    expect(() => getCombatTileScale(42)).toThrow(RangeError);
+    expect(() => getCombatTileScale(14.5)).toThrow(RangeError);
   });
 
   it('should fit a 256px actor texture to 70% of the responsive combat cell', () => {

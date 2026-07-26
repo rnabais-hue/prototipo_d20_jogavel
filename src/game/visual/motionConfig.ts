@@ -2,6 +2,7 @@
  * Motion configuration and duration mappings.
  * Pure presentation helper module.
  */
+import type { GridCell } from '../../movement/grid';
 
 export const MOTION_DURATIONS = {
   selection: 100,
@@ -9,8 +10,9 @@ export const MOTION_DURATIONS = {
   lunge: 150,
   hitReaction: 150,
   missEvade: 150,
-  combatMove: 300,
-  defeat: 300,
+  combatMove: 120,
+  recovery: 140,
+  defeat: 480,
 } as const;
 
 export type MotionDurationKey = keyof typeof MOTION_DURATIONS;
@@ -39,4 +41,12 @@ export function getMotionDuration(key: MotionDurationKey): number {
     return 0;
   }
   return MOTION_DURATIONS[key];
+}
+
+export function getCombatMoveDuration(
+  from: GridCell,
+  to: GridCell,
+): number {
+  const distance = Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
+  return distance * getMotionDuration('combatMove');
 }

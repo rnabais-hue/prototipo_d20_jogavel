@@ -37,10 +37,9 @@ export function createCombatMenuView(scene: Phaser.Scene): CombatMenuView {
       
       const statusText = item.available
         ? availLabel
-        : `${availLabel}${item.distance === undefined ? '' : ` (distance ${item.distance})`}`;
+        : `${availLabel}${item.distance === undefined ? '' : ` d${item.distance}`}`;
 
-      // Format: [1] Practice Strike - Melee 1 - READY
-      const lineText = `[${index + 1}] ${item.actionLabel} - ${rangeConfig.label} ${item.maximumDistance} - ${statusText}`;
+      const lineText = `[${index + 1}] ${item.actionLabel} · ${rangeConfig.label} ${item.maximumDistance} · ${statusText}`;
 
       // Map range configs
       let fontStyle = 'normal';
@@ -56,7 +55,7 @@ export function createCombatMenuView(scene: Phaser.Scene): CombatMenuView {
       const textObj = scene.add.text(promptsX, currentY, lineText, {
         color: colorStr,
         fontFamily: 'Arial, sans-serif',
-        fontSize: '11px',
+        fontSize: '10px',
         fontStyle,
       }).setScrollFactor(0);
 

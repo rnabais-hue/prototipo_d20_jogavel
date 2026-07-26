@@ -40,7 +40,7 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 - **WebP (`.webp`)**:
   - Preferred for opaque terrain textures (e.g., stone flooring, tiled dirt) due to high compression efficiency.
 - **JSON (`.json`)**:
-  - Only allowed in combination with `.png` files when implementing Phaser textures atlas packs.
+  - Allowed for Phaser texture atlases and Tiled tilemaps paired with cataloged PNG tilesets.
 - **No SVG (`.svg`)**:
   - Vector files are prohibited due to runtime rendering overhead and browser security policies unless explicitly approved.
 
@@ -66,19 +66,23 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 ### Tileability
 - Terrain textures (exploration/combat ground) **must be perfectly tileable** (seamless horizontal and vertical looping).
 - Standard tiling bounds are matching power-of-two grids (e.g. 32x32, 64x64, 128x128).
+- The combat pixel-art contract uses native `16 x 16` tiles composed by Tiled JSON, never a
+  single painting reduced to cell size or stretched across the arena.
 
 ### Sprite Anchors
 - Actor sprites must anchor at their ground contact point rather than the geometric center.
   - Recommended player/enemy anchor: `(x: 0.5, y: 0.82)`.
+  - Task 07 normalized combat sheets use `(x: 0.5, y: 0.9375)` in uniform `32 x 32` frames.
   - Wall obstacles, panels, and basic terrain anchor at the center: `(x: 0.5, y: 0.5)`.
 
 ### Logical Sizing vs. Source Resolution
 - Game logic positions entities using an orthogonal grid. The presentation scales source textures to match their **Logical Dimensions** in the catalog.
 - Standard logical dimensions:
   - Exploration tile/obstacle: `32 x 32` logical pixels.
-  - Combat cell: dynamic (maximum `42 x 42` logical pixels).
+  - Combat cell: fixed `32 x 32` logical pixels for the pixel-art slice.
   - UI Icons: `16 x 16` logical pixels.
-- The actual source resolution can be higher (e.g., `64x64` or `128x128` pixels for high-DPI display density) but must scale proportionally to fit the logical dimensions configuration.
+- Pixel-art sources use nearest-neighbor integer scaling only. Painterly exploration placeholders
+  may retain their existing proportional presentation until a separate migration task.
 
 ### Spritesheet Frame Conventions
 - Spritesheet frames must be uniform in dimensions (`frameWidth` and `frameHeight`).
@@ -99,7 +103,8 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 3. Locate its stable key in `src/game/visual/assetKeys.ts`.
 4. Update the catalog entry in `src/game/visual/assetCatalog.ts`:
    - Change `path` from `null` to the valid `/assets/...` path.
-   - Configure the appropriate `resourceKind` ('image' or 'spritesheet').
+   - Configure the appropriate `resourceKind` (`image`, `spritesheet`, or
+     `tilemap-tiled-json`).
    - Set `loadByDefault: true` (if required to load at boot).
    - Enter logical width, height, anchor, and spritesheet frame dimensions.
 5. Re-run validation (`npm run test`) to confirm no metadata mismatch.

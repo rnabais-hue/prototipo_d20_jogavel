@@ -370,3 +370,134 @@ The following nine state sheets were approved by the user for experimental runti
 | `visual.actor.enemy.attack` | `/assets/actors/enemies/A7-enemy-attack-3f-256.png` | `880CECC6CD57D9F53CE8CC74683D94592EEA8210D8D85770BCC3AF7DFB9439ED` |
 | `visual.actor.enemy.hit` | `/assets/actors/enemies/A7-enemy-hit-3f-256.png` | `EFB1C23BED20145905E79B25624015D23234EA1EF3971B8AD2357315A16F9716` |
 | `visual.actor.enemy.defeat` | `/assets/actors/enemies/A7-enemy-defeat-3f-256.png` | `91393B0EA194B212F759E287A4468929EB5DA332AD184BEAA3A0A1D9AC38E5F9` |
+
+---
+
+## 4. Task 07 combat pixel-art vertical slice
+
+### 16x16 DungeonTileset II v1.7 source intake
+
+- **Source archive**: `0x72_DungeonTilesetII_v1.7.zip`
+- **Source archive SHA-256**: `A5B23341EBC831D7798BFB9666D864A08C079BB7AED18E3CF023A27D517C1512`
+- **Download date**: `2026-07-25`
+- **Source URL**: `https://0x72.itch.io/dungeontileset-ii`
+- **Creator**: 0x72 (Robert)
+- **Declared asset license**: Creative Commons Zero v1.0 Universal
+- **Native pixel unit**: `16 x 16`
+- **Source page AI declaration**: No generative AI was used
+- **Archive version evidence**: the source page lists v1.7 and the archive is named
+  `0x72_DungeonTilesetII_v1.7.zip`
+- **Approval status**: source, direction, and the `1280 x 720` and `1920 x 1080` full-scene
+  runtime captures approved by the user on `2026-07-26`
+
+Only these original archive files were selected:
+
+- `frames/floor_1.png`
+- `frames/floor_2.png`
+- `frames/floor_3.png`
+- `frames/wall_mid.png`
+- `frames/knight_m_idle_anim_f0.png` through
+  `frames/knight_m_idle_anim_f3.png`
+- `frames/knight_m_run_anim_f0.png` through
+  `frames/knight_m_run_anim_f3.png`
+- `frames/knight_m_hit_anim_f0.png`
+- `frames/orc_warrior_idle_anim_f0.png` through
+  `frames/orc_warrior_idle_anim_f3.png`
+- `frames/orc_warrior_run_anim_f0.png` through
+  `frames/orc_warrior_run_anim_f3.png`
+- `frames/weapon_regular_sword.png`
+- `frames/weapon_spear.png`
+- `frames/weapon_axe.png`
+
+No other archive file is copied into the repository.
+
+### visual.combat.terrain.pixel-tiles
+
+- **Semantic Asset Key**: `visual.combat.terrain.pixel-tiles`
+- **Repository Path**: `/assets/terrain/combat/pixel/combat-dungeon-tiles.png`
+- **Category**: `terrain`
+- **Source Type**: `permissive-external`
+- **Creator**: 0x72 (Robert)
+- **License or Usage Basis**: CC0-1.0
+- **Modifications Performed**: copied `floor_1.png`, `floor_2.png`, `floor_3.png`, and
+  `wall_mid.png` byte-for-pixel into a single horizontal `64 x 16` atlas in that order; no
+  resampling, repainting, palette change, alpha change, or interpolation
+- **Integrity**: SHA-256
+  `9C430119F9FC30689058C57B97BB98654BE5B1E3A41C68D1850C1D6A2AADC5DC`
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
+- **Replacement Status**: replaces the generated combat-floor painting in the Task 07 slice
+- **Notes**: Tiled tileset name `combat-dungeon-tiles`; tile ids `0` to `3` preserve the source
+  order above. The repository-authored `combat-arena.json` uses a `12 x 10` map with `Ground`,
+  `Boundary`, and `Decoration` layers; the inner `10 x 8` region remains the authoritative
+  combat grid.
+
+### visual.combat.actor.player.body
+
+- **Semantic Asset Key**: `visual.combat.actor.player.body`
+- **Repository Path**: `/assets/actors/combat/player/combat-player-body.png`
+- **Category**: `actors`
+- **Source Type**: `permissive-external`
+- **Creator**: 0x72 (Robert)
+- **License or Usage Basis**: CC0-1.0
+- **Modifications Performed**: source pixels were placed without resampling into twenty
+  transparent `32 x 32` frames with a common ground-contact baseline at source y=`30`, then
+  packed horizontally. Frames `0-3` use the four idle frames; `4-7` use the four run frames;
+  `8-11` use idle 0, run 0, hit 0, idle 0; `12-15` use idle 0, hit 0, hit 0, idle 0; and
+  `16-19` use idle 0 followed by hit 0 three times. No source pixel was repainted, rescaled, or
+  interpolated.
+- **Integrity**: SHA-256
+  `8DF6AFC269D4C4FA419CCB0CD052C0749E84A4A3FAC8D37A3ED1415F21D1D890`
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
+- **Replacement Status**: replaces the generated 256-pixel combat player sheets only
+- **Notes**: south-facing top-down three-quarter body/outfit base; runtime scale `2`; anchor
+  `(0.5, 0.9375)`.
+
+### visual.combat.actor.enemy.body
+
+- **Semantic Asset Key**: `visual.combat.actor.enemy.body`
+- **Repository Path**: `/assets/actors/combat/enemy/combat-enemy-body.png`
+- **Category**: `actors`
+- **Source Type**: `permissive-external`
+- **Creator**: 0x72 (Robert)
+- **License or Usage Basis**: CC0-1.0
+- **Modifications Performed**: source pixels were placed without resampling into twenty
+  transparent `32 x 32` frames with a common ground-contact baseline at source y=`30`, then
+  packed horizontally. Frames `0-3` use the four idle frames; `4-7` use the four run frames;
+  attack, hit, and defeat ranges reuse the explicitly declared idle/run source frames because
+  the pack has no orc hit or attack sheet. No source pixel was repainted, rescaled, or
+  interpolated; state distinction is completed by runtime choreography.
+- **Integrity**: SHA-256
+  `FFA9C8E5EEA095A2785906E383E9E4FA31A5938A7AA5C4AEF22E8EA4E90EB9F1`
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
+- **Replacement Status**: replaces the generated 256-pixel combat enemy sheets only
+- **Notes**: south-facing top-down three-quarter body/outfit base; runtime scale `2`; anchor
+  `(0.5, 0.9375)`.
+
+### Modular main-hand layers
+
+The three files below contain twenty transparent `32 x 32` frames aligned to the actor frame
+clock. Original weapon pixels were never rescaled or repainted. Each source was rotated with
+nearest-neighbor sampling and placed at integer coordinates. Frames `0-7` retain an upright
+idle/movement pose with a one-pixel vertical step; `8-11` form the anticipation/contact swing;
+`12-15` form the hit/recovery pose; and `16-19` lower the weapon into the defeat pose. The
+player sword and spear use the same generic pose data, proving that the main-hand visual is a
+profile-data swap. The enemy axe uses the mirrored pose data.
+
+| Semantic Asset Key | Repository Path | Source file | SHA-256 |
+| --- | --- | --- | --- |
+| `visual.combat.actor.player.main-hand.sword` | `/assets/actors/combat/player/combat-player-main-hand-sword.png` | `frames/weapon_regular_sword.png` | `46775EDA042E5DD56BEC5191016E5D4598C906D5857DF01ECBF1C638956E61E1` |
+| `visual.combat.actor.player.main-hand.spear` | `/assets/actors/combat/player/combat-player-main-hand-spear.png` | `frames/weapon_spear.png` | `5D7460085F1EFE45411D453BEEC13AFC3CEBBED04BA913A1DA91D42955E1D749` |
+| `visual.combat.actor.enemy.main-hand.axe` | `/assets/actors/combat/enemy/combat-enemy-main-hand-axe.png` | `frames/weapon_axe.png` | `20D30738CB84292EC257ADAC6E913E967FE1F7195AFBFCDA0C3CE64557F58517` |
+
+- **Category**: `actors`
+- **Source Type**: `permissive-external`
+- **Creator**: 0x72 (Robert)
+- **License or Usage Basis**: CC0-1.0
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
+- **Replacement Status**: original Task 07 modular derivatives
+- **Notes**: runtime scale `2`; anchor `(0.5, 0.9375)`; every visible layer shares the same
+  frame ranges, duration, origin, scale, depth policy, and state transition.

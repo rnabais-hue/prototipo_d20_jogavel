@@ -50,6 +50,10 @@ scene behaviour is stated from the code in `src/game/scenes/PrototypeScene.ts`.
   `docs/COMBAT_VISUAL_FEEDBACK_CLOSEOUT_V1.md`.
 - Typed asset catalog with deterministic code-native fallbacks, actor animations and a serialized
   motion queue (`src/game/visual/`). Closed in `docs/PLAYABLE_PRESENTATION_CLOSEOUT_V1.md`.
+- Combat-only modular pixel-art vertical slice: 640x360 logical rendering at integer display
+  scale, a 16x16 Tiled arena, synchronized body/main-hand layers, five animation states, and a
+  profile-data weapon swap (`src/game/visual/combatAppearanceProfiles.ts`). Closed in
+  `docs/COMBAT_VISUAL_DIRECTION_VERTICAL_SLICE_CLOSEOUT_V1.md`.
 - Normal / debug presentation toggle that hides technical HUD blocks by default
   (`src/game/visual/presentationState.ts`, `docs/DEBUG_PRESENTATION_TOGGLE_V0.md`).
 
@@ -64,7 +68,8 @@ scene behaviour is stated from the code in `src/game/scenes/PrototypeScene.ts`.
   save/load or audio.
 - No character creation or progression; the playable sheet is a fixed content preset.
 - Only the debug exploration map exists; there is no level or encounter authoring pipeline.
-- Art is code-native placeholder work, not production art.
+- Exploration still uses the earlier painterly placeholders. Combat uses a narrow CC0 pixel-art
+  vertical slice; neither area is production-complete.
 
 ## Open For Review
 
@@ -108,6 +113,10 @@ Attacks submenu:
 
 - 1 / 2 / 3: resolve the melee, short-range or long-range weapon action.
 - 0: back to the main menu.
+
+For the Task 07 visual proof, append
+`?visual.player=combat.player.spear` to the local URL to swap only the player's main-hand layer.
+This is a presentation profile demonstration, not gameplay equipment or inventory integration.
 
 Abilities submenu:
 
