@@ -32,6 +32,9 @@ context model defined in decision 0049: core, compartment, archive.
 - Every task that changes architecture appends a new numbered entry to `docs/DECISIONS.md`,
   following the existing `Decision:` / `Reason:` format.
 - All text written into this repository is in English, regardless of the language of the prompt.
+- Publishing a branch or opening a pull request does not require the local GitHub CLI. Prefer
+  the connected GitHub App/connector for pull-request operations; use `gh` only as an optional
+  fallback when it is already available. A missing local `gh` executable is not a blocker.
 
 ## Validation gate
 
@@ -46,7 +49,7 @@ run build
 Use the package manager declared in `package.json` under `packageManager`. The known
 non-blocking warning is the production chunk above 500 kB.
 
-The test suite baseline is **57 files, 452 tests**. A refactor that changes these numbers has
+The test suite baseline is **58 files, 457 tests**. A refactor that changes these numbers has
 changed behaviour and has failed, unless the task file explicitly authorises the change.
 
 ## Execution order
@@ -61,9 +64,10 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `05-reconcile-content-models.md` | Reconcile the two parallel content models | 04, 06 |
 | `06-move-resolution-out-of-content.md` | Sheet resolution logic leaves the content pack | 04 |
 | `07-combat-visual-direction-vertical-slice.md` | Prove the modular pixel-art direction in combat | 05, 06 |
+| `08-modular-character-visual-breadth.md` | Prove modular character identity and facing breadth | 07 |
 
-Tasks 00 through 06 are complete and merged. Task 07 is the next implementation task after
-its specification and decision 0057 are reviewed and merged.
+Tasks 00 through 07 are complete and merged. Task 08 is the next implementation task after its
+specification is reviewed and merged.
 
 ## Plan of record
 
@@ -81,6 +85,10 @@ decisions 0047 and 0048.
 
 **Phase D — prove the visual direction.** Task 07. Deliver a combat-only modular pixel-art
 vertical slice before applying the direction to exploration.
+
+**Phase E — prove modular character breadth.** Task 08. Demonstrate distinct character
+identities, data-composed equipment layers, and the cardinal facings required by board movement
+without changing mechanics or introducing inventory.
 
 **Deferred, deliberately.** `src/game/scenes/PrototypeScene.ts` is 1507 lines and orchestrates
 exploration, combat, HUD, console, menu, camera, layout and input. Splitting it is real work
