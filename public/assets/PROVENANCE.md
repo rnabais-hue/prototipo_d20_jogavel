@@ -387,8 +387,8 @@ The following nine state sheets were approved by the user for experimental runti
 - **Source page AI declaration**: No generative AI was used
 - **Archive version evidence**: the source page lists v1.7 and the archive is named
   `0x72_DungeonTilesetII_v1.7.zip`
-- **Approval status**: source and direction approved; runtime captures pending human visual
-  review
+- **Approval status**: source, direction, and the `1280 x 720` and `1920 x 1080` full-scene
+  runtime captures approved by the user on `2026-07-26`
 
 Only these original archive files were selected:
 
@@ -424,7 +424,8 @@ No other archive file is copied into the repository.
   resampling, repainting, palette change, alpha change, or interpolation
 - **Integrity**: SHA-256
   `9C430119F9FC30689058C57B97BB98654BE5B1E3A41C68D1850C1D6A2AADC5DC`
-- **Approval Status**: `Pending` runtime capture review
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
 - **Replacement Status**: replaces the generated combat-floor painting in the Task 07 slice
 - **Notes**: Tiled tileset name `combat-dungeon-tiles`; tile ids `0` to `3` preserve the source
   order above. The repository-authored `combat-arena.json` uses a `12 x 10` map with `Ground`,
@@ -447,7 +448,8 @@ No other archive file is copied into the repository.
   interpolated.
 - **Integrity**: SHA-256
   `8DF6AFC269D4C4FA419CCB0CD052C0749E84A4A3FAC8D37A3ED1415F21D1D890`
-- **Approval Status**: `Pending` runtime capture review
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
 - **Replacement Status**: replaces the generated 256-pixel combat player sheets only
 - **Notes**: south-facing top-down three-quarter body/outfit base; runtime scale `2`; anchor
   `(0.5, 0.9375)`.
@@ -468,7 +470,8 @@ No other archive file is copied into the repository.
   interpolated; state distinction is completed by runtime choreography.
 - **Integrity**: SHA-256
   `FFA9C8E5EEA095A2785906E383E9E4FA31A5938A7AA5C4AEF22E8EA4E90EB9F1`
-- **Approval Status**: `Pending` runtime capture review
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
 - **Replacement Status**: replaces the generated 256-pixel combat enemy sheets only
 - **Notes**: south-facing top-down three-quarter body/outfit base; runtime scale `2`; anchor
   `(0.5, 0.9375)`.
@@ -493,7 +496,8 @@ profile-data swap. The enemy axe uses the mirrored pose data.
 - **Source Type**: `permissive-external`
 - **Creator**: 0x72 (Robert)
 - **License or Usage Basis**: CC0-1.0
-- **Approval Status**: `Pending` runtime capture review
+- **Approval Status**: `Approved` by the user on `2026-07-26` after full-scene runtime capture
+  review
 - **Replacement Status**: original Task 07 modular derivatives
 - **Notes**: runtime scale `2`; anchor `(0.5, 0.9375)`; every visible layer shares the same
   frame ranges, duration, origin, scale, depth policy, and state transition.

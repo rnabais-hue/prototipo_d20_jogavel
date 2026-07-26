@@ -2,9 +2,9 @@
 
 ## Status
 
-Implementation complete on `agent/combat-visual-vertical-slice`. Automated verification and
-runtime capture review are complete. Merge remains blocked until a human reviewer approves the
-two full-scene reference captures.
+Implementation and human visual review complete on `agent/combat-visual-vertical-slice`.
+Automated verification and runtime capture review are complete. The user approved both
+full-scene reference captures on `2026-07-26`.
 
 ## Delivered
 
@@ -77,5 +77,5 @@ Additional review captures:
 
 ## Merge gate
 
-Human approval of `combat-idle-1280x720.png` and `combat-spear-1920x1080.png` is required before
-this branch may be merged.
+The user satisfied the human merge gate on `2026-07-26` by approving
+`combat-idle-1280x720.png` and `combat-spear-1920x1080.png`.
