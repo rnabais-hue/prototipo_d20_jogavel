@@ -501,3 +501,132 @@ profile-data swap. The enemy axe uses the mirrored pose data.
 - **Replacement Status**: original Task 07 modular derivatives
 - **Notes**: runtime scale `2`; anchor `(0.5, 0.9375)`; every visible layer shares the same
   frame ranges, duration, origin, scale, depth policy, and state transition.
+
+---
+
+## 5. Task 08 modular character visual breadth
+
+### Supplementary 16x16 character-layer source intake
+
+- **Source file**: `character-sheet-1-16px.png`
+- **Source file SHA-256**:
+  `562B56CDA92FCC47BF75AAF45201B80923827F23ADBEA65C6E813A95DCFDC236`
+- **Download date**: `2026-07-26`
+- **Authoritative source URL**:
+  `https://opengameart.org/content/16x16-character-sheet-with-separate-clothing-layers`
+- **Direct file URL**:
+  `https://opengameart.org/sites/default/files/character-sheet-1-16px.png`
+- **Creator**: chrisf
+- **Declared asset license**: Creative Commons Attribution 4.0 International
+  (`https://creativecommons.org/licenses/by/4.0/`)
+- **Published date**: `2020-07-30`
+- **Source page description**: four directions, two frames per direction, and up to five
+  separately composable layers
+- **Source page AI declaration**: no AI-use declaration is published; none is inferred
+- **Repository intake**: the original source file remains outside the repository; only the
+  minimum runtime derivatives listed below are committed
+- **Approval status**: `Approved` by the project owner on `2026-07-26`
+
+The CC BY 4.0 grant permits sharing and adaptation, including commercial use, provided
+attribution and the license notice are retained and modifications are indicated. The source
+page and license contain no non-commercial, no-derivatives, share-alike, source-file,
+repository-access, team-access, or post-subscription restriction. This repository records the
+creator, source URL, license URL, and derivative operations as the required attribution.
+
+Only source columns x=`0..127` and rows y=`0..79` were selected. They contain eight `16 x 16`
+frames in each of five layer rows. No other source pixels or files were selected.
+
+### Task 07 source reuse for Task 08 equipment
+
+The already approved `0x72_DungeonTilesetII_v1.7.zip` intake in section 4 is reused without
+copying the archive into the repository. Its archive SHA-256 is
+`A5B23341EBC831D7798BFB9666D864A08C079BB7AED18E3CF023A27D517C1512`;
+creator 0x72 (Robert); declared license CC0-1.0; authoritative URL
+`https://0x72.itch.io/dungeontileset-ii`; source page declares that no generative AI was used.
+
+The additional selected archive entries are:
+
+| Source entry | Source SHA-256 |
+| --- | --- |
+| `frames/weapon_regular_sword.png` | `3F06A67C06A00D261096C828AF577749CD88EB4A6AE23743667D5D5351006B22` |
+| `frames/weapon_spear.png` | `CDAB8D3EA8F3685B182FDBE0D35596B6D7BE7035065357D87D9F45CDBDB63BCC` |
+| `frames/weapon_green_magic_staff.png` | `FAE3B619A467262ED3511C2456558E99D7C41235805AE56CCB5649C72C8AA565` |
+| `frames/weapon_bow.png` | `A4EF5DEEEF26691C20D11A1A6BBC2AC87556992F21B377E325562BFE28CADE3C` |
+
+### Common Task 08 derivative contract
+
+All ten runtime files are `256 x 32` RGBA spritesheets containing eight uniform `32 x 32`
+frames in this order: south frames `0-1`, east `2-3`, west `4-5`, and north `6-7`. Runtime
+presentation repeats each facing pair to fill the existing four-frame clocks for `idle`,
+`movement`, `attack`, `hit`, and `defeat`; state distinction remains generic choreography.
+Every sheet uses native unit `16`, integer positions, hard pixel edges, display scale `2`, and
+ground-contact anchor `(0.5, 0.9375)`.
+
+For the body, outfit, and accessory derivatives, each selected `16 x 16` source frame was
+placed unscaled at local `(8,14)` in its `32 x 32` destination frame. Source alpha was retained.
+For each non-transparent source pixel, palette mapping used
+`luminance = (sourceRed + sourceGreen + sourceBlue) / (3 * 255)` and
+`factor = 0.25 + 0.75 * luminance`, then rounded each
+`baseChannel * factor` to an 8-bit channel. No interpolation, mirroring, outline generation,
+or AI processing was used.
+
+For equipment derivatives, original weapon pixels were copied without recoloring or
+resampling. South and north retain the source orientation; east uses a 90-degree rotation and
+west a 270-degree rotation, both with nearest-neighbor sampling. Every placement is at integer
+coordinates. Frame 1 of each facing applies a one-pixel downward step. Main-hand south is
+right-aligned to x=`30-width`, main-hand north starts at x=`2`; off-hand uses the opposite
+horizontal placement. East/west start at x=`1` and are vertically centered around y=`15`
+before the frame step.
+
+### Character-layer derivatives
+
+| Semantic Asset Key | Repository Path | Source row and palette base | Runtime SHA-256 |
+| --- | --- | --- | --- |
+| `visual.combat.actor.breadth.body` | `/assets/actors/combat/breadth/combat-breadth-body.png` | row `0`, RGB `(224,174,122)` | `A980ABC614CA4A1001533604E1046A4562D146FBDEA51EE266696D3EF3033B73` |
+| `visual.combat.actor.breadth.outfit.combatant` | `/assets/actors/combat/breadth/combat-breadth-outfit-combatant.png` | rows `1`, `2`, `4`; RGB `(232,184,68)` / `(80,137,176)` / `(88,102,75)` | `4E767B91DBA465E343E9951E63A9D7292FB58704BF505FBC57A1AE26D8C5A266` |
+| `visual.combat.actor.breadth.outfit.caster` | `/assets/actors/combat/breadth/combat-breadth-outfit-caster.png` | rows `1`, `2`, `4`; RGB `(246,207,82)` / `(126,78,190)` / `(72,55,111)` | `85A9B2E3D73C4E6393C756341507235D4843D8BD5085688B6A7A5B66F69F1DA9` |
+| `visual.combat.actor.breadth.outfit.specialist` | `/assets/actors/combat/breadth/combat-breadth-outfit-specialist.png` | rows `1`, `2`, `4`; RGB `(192,148,70)` / `(62,130,111)` / `(67,77,57)` | `39497D4091DF6E99C9182372DCA91EB09F022156AF4E1FC272D08C68AD244F11` |
+| `visual.combat.actor.breadth.accessory.caster` | `/assets/actors/combat/breadth/combat-breadth-accessory-caster.png` | row `3`, RGB `(177,83,210)` | `C0A3F6CD3FAB68FF9C31C943847B601EEBB43B8F5B69232ECA288B1E8A882380` |
+| `visual.combat.actor.breadth.accessory.specialist` | `/assets/actors/combat/breadth/combat-breadth-accessory-specialist.png` | row `3`, RGB `(72,87,94)` | `4E6A606D18C13569813D5C3CB466DD7307AB736C43776E483F6DA3D4170C735F` |
+
+- **Category**: `actors`
+- **Source Type**: `permissive-external`
+- **Creator**: chrisf
+- **License or Usage Basis**: CC BY 4.0 with attribution above
+- **Approval Status**: `Approved` by the project owner on `2026-07-26` after corrected
+  full-scene identity and facing review
+- **Replacement Status**: original Task 08 modular derivatives
+- **Notes**: body, outfit, and accessory remain separately addressable generic layers. The
+  caster and specialist use visible accessories; the combatant deliberately omits the optional
+  accessory slot instead of substituting unrelated art.
+
+### Equipment derivatives
+
+| Semantic Asset Key | Repository Path | Source entry | Runtime SHA-256 |
+| --- | --- | --- | --- |
+| `visual.combat.actor.breadth.main-hand.sword` | `/assets/actors/combat/breadth/combat-breadth-main-hand-sword.png` | `frames/weapon_regular_sword.png` | `697E6F7CA2222F733D2BEFB99D173C0DFB3DC87769C0902BCF69D943D4FB4C97` |
+| `visual.combat.actor.breadth.main-hand.spear` | `/assets/actors/combat/breadth/combat-breadth-main-hand-spear.png` | `frames/weapon_spear.png` | `A6A20FA54D6A4D374E37A0AB127AC9EABCEC8A69B723FF5C0DA86DB8DBA70D18` |
+| `visual.combat.actor.breadth.main-hand.staff` | `/assets/actors/combat/breadth/combat-breadth-main-hand-staff.png` | `frames/weapon_green_magic_staff.png` | `522D379213B0F81E802D316B53200489CD99C8861CD9BF0D485C8945208C966B` |
+| `visual.combat.actor.breadth.off-hand.bow` | `/assets/actors/combat/breadth/combat-breadth-off-hand-bow.png` | `frames/weapon_bow.png` | `2DD24B6FDED9218986B73BA0E9A11734010566E4C022B1FDA197E438B17A8E54` |
+
+- **Category**: `actors`
+- **Source Type**: `permissive-external`
+- **Creator**: 0x72 (Robert)
+- **License or Usage Basis**: CC0-1.0
+- **Approval Status**: `Approved` by the project owner on `2026-07-26` after corrected Task 08
+  visual review; source intake was approved for Task 07 on `2026-07-26`
+- **Replacement Status**: original Task 08 modular derivatives
+- **Notes**: `combat.player.combatant-spear` changes only the combatant profile's `mainHand`
+  assignment. The bow is deliberately assigned to the generic `offHand` slot. No visual
+  equipment selection changes a sheet, action, range, statistic, resource, or combat rule.
+
+### Commercial replacement readiness
+
+No paid or proprietary file is used by Task 08. The runtime catalog and profiles contain no
+provider, product, license, purchase, or source-pack branch. A future commercial replacement
+must record its actual provider-defined license tier and entitlement evidence rather than
+`CC0`, must pass the repository-access and redistribution gate in
+`tasks/08-modular-character-visual-breadth.md`, and must replace only catalog/profile data and
+runtime files. In particular, private repository visibility alone is not treated as permission
+to commit a CraftPix file, and no CraftPix file may be supplied to an AI system under the
+license terms reviewed on `2026-07-26`.

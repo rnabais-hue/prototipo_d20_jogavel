@@ -3,11 +3,12 @@ import { VISUAL_ASSET_KEYS, type VisualAssetKey } from './assetKeys';
 import { isReducedMotion } from './motionConfig';
 import {
   COMBAT_APPEARANCE_PROFILES,
-  getCombatAppearanceAnimation,
-  resolveCombatAppearanceLayers,
+  COMBAT_APPEARANCE_STATES,
+  resolveCombatAppearanceLayerPresentations,
   type CombatAppearanceLayerSlot,
   type CombatAppearanceProfile,
   type CombatAppearanceState,
+  type CombatFacing,
 } from './combatAppearanceProfiles';
 
 export type ActorAnimationRole = 'player' | 'enemy';
@@ -63,31 +64,14 @@ export function createActorAnimations(scene: Phaser.Scene): void {
   }
 
   for (const profile of Object.values(COMBAT_APPEARANCE_PROFILES)) {
-    for (const state of Object.keys(COMBAT_APPEARANCE_ANIMATIONS) as CombatAppearanceState[]) {
+    if (profile.presentation) continue;
+    for (const state of COMBAT_APPEARANCE_STATES) {
       for (const definition of buildCombatLayerAnimationDefinitions(profile, state)) {
-        if (!scene.textures.exists(definition.textureKey)) continue;
-        if (scene.anims.exists(definition.animationKey)) continue;
-        scene.anims.create({
-          key: definition.animationKey,
-          frames: definition.frames.map((frame) => ({
-            key: definition.textureKey,
-            frame,
-          })),
-          duration: definition.duration,
-          repeat: definition.repeat,
-        });
+        registerCombatLayerAnimation(scene, definition);
       }
     }
   }
 }
-
-const COMBAT_APPEARANCE_ANIMATIONS = Object.freeze({
-  idle: true,
-  movement: true,
-  attack: true,
-  hit: true,
-  defeat: true,
-} satisfies Record<CombatAppearanceState, true>);
 
 export type CombatLayerAnimationDefinition = Readonly<{
   slot: CombatAppearanceLayerSlot;
@@ -96,30 +80,51 @@ export type CombatLayerAnimationDefinition = Readonly<{
   frames: readonly number[];
   duration: number;
   repeat: number;
+  flipX: boolean;
 }>;
+
+function registerCombatLayerAnimation(
+  scene: Phaser.Scene,
+  definition: CombatLayerAnimationDefinition,
+): void {
+  if (!scene.textures.exists(definition.textureKey)) return;
+  if (scene.anims.exists(definition.animationKey)) return;
+  scene.anims.create({
+    key: definition.animationKey,
+    frames: definition.frames.map((frame) => ({
+      key: definition.textureKey,
+      frame,
+    })),
+    duration: definition.duration,
+    repeat: definition.repeat,
+  });
+}
 
 export function getCombatLayerAnimationKey(
   profileId: string,
   slot: CombatAppearanceLayerSlot,
   state: CombatAppearanceState,
+  facing: CombatFacing = 'south',
 ): string {
-  return `visual.animation.combat.${profileId}.${slot}.${state}`;
+  return `visual.animation.combat.${profileId}.${slot}.${facing}.${state}`;
 }
 
 export function buildCombatLayerAnimationDefinitions(
   profile: CombatAppearanceProfile,
   state: CombatAppearanceState,
+  facing: CombatFacing = profile.facing,
 ): readonly CombatLayerAnimationDefinition[] {
-  const animation = getCombatAppearanceAnimation(state);
-  return resolveCombatAppearanceLayers(profile).map(({ slot, textureKey }) =>
-    Object.freeze({
-      slot,
-      textureKey,
-      animationKey: getCombatLayerAnimationKey(profile.id, slot, state),
-      frames: animation.frames,
-      duration: animation.duration,
-      repeat: animation.repeat,
-    }),
+  return resolveCombatAppearanceLayerPresentations(profile, facing, state).map(
+    ({ slot, textureKey, animation, flipX }) =>
+      Object.freeze({
+        slot,
+        textureKey,
+        animationKey: getCombatLayerAnimationKey(profile.id, slot, state, facing),
+        frames: animation.frames,
+        duration: animation.duration,
+        repeat: animation.repeat,
+        flipX,
+      }),
   );
 }
 
@@ -128,12 +133,14 @@ export function playCombatAppearanceAnimation(
   sprites: CombatAppearanceSpriteLayers,
   profile: CombatAppearanceProfile,
   state: CombatAppearanceState,
+  facing: CombatFacing = profile.facing,
 ): boolean {
-  const definitions = buildCombatLayerAnimationDefinitions(profile, state);
+  const definitions = buildCombatLayerAnimationDefinitions(profile, state, facing);
   let played = false;
   for (const definition of definitions) {
     const sprite = sprites[definition.slot];
     if (!sprite) continue;
+    sprite.setFlipX(definition.flipX);
     if (isReducedMotion()) {
       sprite.stop();
       sprite.setTexture(
@@ -143,6 +150,7 @@ export function playCombatAppearanceAnimation(
       played = true;
       continue;
     }
+    registerCombatLayerAnimation(scene, definition);
     if (!scene.anims.exists(definition.animationKey)) continue;
     sprite.play(definition.animationKey, true);
     played = true;

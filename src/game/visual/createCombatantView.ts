@@ -22,6 +22,7 @@ import {
   resolveCombatAppearanceProfile,
   type CombatAppearanceLayerSlot,
   type CombatAppearanceProfile,
+  type CombatFacing,
 } from './combatAppearanceProfiles';
 
 const ACTOR_LAYER_NAME_PREFIX = 'actor-layer-';
@@ -64,6 +65,7 @@ export type CombatantViewOptions = {
   cellSize: number;
   isTarget: boolean;
   appearanceProfile?: CombatAppearanceProfile;
+  facing?: CombatFacing;
 };
 
 export function getCombatantDisplaySize(
@@ -179,6 +181,7 @@ export function drawCombatantToken(
       sprites,
       appearanceProfile,
       defeated ? 'defeat' : 'idle',
+      options.facing ?? appearanceProfile.facing,
     );
 
     if (defeated) {

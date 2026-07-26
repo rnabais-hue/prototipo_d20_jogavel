@@ -66,8 +66,8 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `07-combat-visual-direction-vertical-slice.md` | Prove the modular pixel-art direction in combat | 05, 06 |
 | `08-modular-character-visual-breadth.md` | Prove modular character identity and facing breadth | 07 |
 
-Tasks 00 through 07 are complete and merged. Task 08 is the next implementation task after its
-specification is reviewed and merged.
+Tasks 00 through 07 are complete and merged. Task 08 is implemented and human-approved on its
+dedicated branch and awaits review and merge through its pull request.
 
 ## Plan of record
 

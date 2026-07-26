@@ -54,6 +54,11 @@ scene behaviour is stated from the code in `src/game/scenes/PrototypeScene.ts`.
   scale, a 16x16 Tiled arena, synchronized body/main-hand layers, five animation states, and a
   profile-data weapon swap (`src/game/visual/combatAppearanceProfiles.ts`). Closed in
   `docs/COMBAT_VISUAL_DIRECTION_VERTICAL_SLICE_CLOSEOUT_V1.md`.
+- Modular character breadth in combat: combatant, caster, and specialist profiles compose
+  body, outfit, main-hand/off-hand, and optional accessory layers through data; the same generic
+  renderer supports four cardinal facings and a one-slot combatant spear variant. No profile
+  changes rules or content sheets. Closeout:
+  `docs/MODULAR_CHARACTER_VISUAL_BREADTH_CLOSEOUT_V1.md`.
 - Normal / debug presentation toggle that hides technical HUD blocks by default
   (`src/game/visual/presentationState.ts`, `docs/DEBUG_PRESENTATION_TOGGLE_V0.md`).
 
@@ -68,8 +73,9 @@ scene behaviour is stated from the code in `src/game/scenes/PrototypeScene.ts`.
   save/load or audio.
 - No character creation or progression; the playable sheet is a fixed content preset.
 - Only the debug exploration map exists; there is no level or encounter authoring pipeline.
-- Exploration still uses the earlier painterly placeholders. Combat uses a narrow CC0 pixel-art
-  vertical slice; neither area is production-complete.
+- Exploration still uses the earlier painterly placeholders. Combat uses a modular pixel-art
+  proof assembled from accurately attributed CC0 and CC BY 4.0 sources; neither area is
+  production-complete.
 
 ## Open For Review
 
@@ -114,9 +120,16 @@ Attacks submenu:
 - 1 / 2 / 3: resolve the melee, short-range or long-range weapon action.
 - 0: back to the main menu.
 
-For the Task 07 visual proof, append
-`?visual.player=combat.player.spear` to the local URL to swap only the player's main-hand layer.
-This is a presentation profile demonstration, not gameplay equipment or inventory integration.
+The generic `visual.player` presentation override supports these review profiles:
+
+- `combat.player.combatant`
+- `combat.player.caster`
+- `combat.player.specialist`
+- `combat.player.combatant-spear`
+
+For example, append `?visual.player=combat.player.caster` to the local URL. The Task 07
+compatibility profile `combat.player.spear` remains available. These are presentation-data
+demonstrations, not character selection, gameplay equipment, or inventory integration.
 
 Abilities submenu:
 

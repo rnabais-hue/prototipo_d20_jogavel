@@ -11,6 +11,9 @@ Each directory represents a specific presentation domain:
 - **`actors/`**: Character and creature visuals.
   - **`player/`**: Player-controlled character sprites, spritesheets, or static tokens.
   - **`enemies/`**: Adversary character sprites, spritesheets, or static tokens (e.g. monsters, guards).
+  - **`combat/breadth/`**: Provider-neutral modular combat layers for body, outfit, main hand,
+    off hand, and accessory slots. Files in this folder are runtime derivatives, not editable
+    source packs.
 - **`terrain/`**: Environmental background grids and flooring textures.
   - **`exploration/`**: Tilesets and terrain textures for adventure map navigation.
   - **`combat/`**: Battle field terrain grid graphics or textures.
@@ -73,6 +76,8 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 - Actor sprites must anchor at their ground contact point rather than the geometric center.
   - Recommended player/enemy anchor: `(x: 0.5, y: 0.82)`.
   - Task 07 normalized combat sheets use `(x: 0.5, y: 0.9375)` in uniform `32 x 32` frames.
+  - Task 08 cardinal modular sheets retain the Task 07 `(x: 0.5, y: 0.9375)` anchor and require
+    every visible layer to share one frame, facing, position, scale, and animation clock.
   - Wall obstacles, panels, and basic terrain anchor at the center: `(x: 0.5, y: 0.5)`.
 
 ### Logical Sizing vs. Source Resolution
@@ -88,6 +93,8 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 - Spritesheet frames must be uniform in dimensions (`frameWidth` and `frameHeight`).
 - Frame indexes start at `0` from the top-left corner, progressing horizontally then vertically.
 - Use explicit `margin` and `spacing` fields if the source sheet has grid borders.
+- Task 08 cardinal sheets contain eight `32 x 32` frames: south `0-1`, east `2-3`, west `4-5`,
+  and north `6-7`. Reuse across animation states is declared in presentation data.
 
 ---
 
@@ -96,6 +103,15 @@ To maintain performance, memory limits, and seamless rendering, strictly adhere 
 - **Strict Domain Logic Boundary**: Direct file paths, filenames, and asset keys are strictly forbidden within the rules, combat, movement, or exploration code layers. These layers remain pure.
 - **Register Every Asset**: Every visual asset used at runtime must be defined in the typed catalog in `src/game/visual/assetCatalog.ts` and bound to a stable key from `src/game/visual/assetKeys.ts`.
 - **Deterministic Fallbacks**: If an asset path is `null`, is disabled, or fails to load, the presentation layer must resolve to a deterministic, code-drawn Phaser Graphics fallback. Game loop logic never crashes due to a missing file.
+- **Provider-neutral profiles**: provider names, product ids, license tiers, purchase models, and
+  source-pack ids belong only in provenance. Production code resolves the same generic visual
+  slots and cardinal presentation data regardless of whether a future replacement is free or
+  commercially licensed.
+- **Commercial intake gate**: private repository visibility is not proof that a proprietary
+  license permits committing files. Confirm repository access, collaborators/automation,
+  redistribution, sublicensing, source-file restrictions, and AI-use restrictions before
+  copying any paid asset. Keep purchase archives, editable masters, credentials, and receipts
+  outside the repository.
 
 ### Asset Replacement Workflow
 1. Export the new asset to the correct folder under `public/assets/` following filename conventions.

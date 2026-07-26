@@ -66,6 +66,11 @@ closeout is named, the source file is the reference.
   Tiled arena, synchronized body/main-hand animation layers, per-cell movement timing, and one
   profile-data weapon swap. Exploration presentation is unchanged.
   Closeout: `docs/COMBAT_VISUAL_DIRECTION_VERTICAL_SLICE_CLOSEOUT_V1.md`.
+- Three modular combat appearance identities (combatant, caster, specialist), cardinal facing
+  derived only from board movement, generic body/outfit/equipment/accessory slots, and a
+  one-slot alternate loadout. These profiles are presentation data and do not create classes,
+  sheets, equipment rules, or inventory.
+  Closeout: `docs/MODULAR_CHARACTER_VISUAL_BREADTH_CLOSEOUT_V1.md`.
 
 ## Outside the Current MVP
 
@@ -83,7 +88,9 @@ Do not implement these unless the user explicitly asks:
 - Save/load.
 - Audio.
 - Production-complete art, a general equipment system, and a paper-doll editor. The current
-  combat art is a narrow CC0 vertical slice only.
+  combat art is a provider-neutral modular proof using attributed CC0 and CC BY 4.0 runtime
+  derivatives; commercial replacement still requires a fresh license and repository-access
+  review.
 - Lore, setting, factions, places, named characters, or worldbuilding.
 - Official IP, official names, official lore, official texts, official rules text, or official
   art, under the rule in `AGENTS.md`.
