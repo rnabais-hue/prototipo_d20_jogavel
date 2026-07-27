@@ -49,7 +49,7 @@ run build
 Use the package manager declared in `package.json` under `packageManager`. The known
 non-blocking warning is the production chunk above 500 kB.
 
-The test suite baseline is **58 files, 457 tests**. A refactor that changes these numbers has
+The test suite baseline is **60 files, 469 tests**. A refactor that changes these numbers has
 changed behaviour and has failed, unless the task file explicitly authorises the change.
 
 ## Execution order
@@ -66,6 +66,7 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `07-combat-visual-direction-vertical-slice.md` | Prove the modular pixel-art direction in combat | 05, 06 |
 | `08-modular-character-visual-breadth.md` | Prove modular character identity and facing breadth | 07 |
 | `09-github-pages-playtest-preview.md` | Publish the validated browser build as a Pages preview | 08 |
+| `10-exploration-visual-direction-integration.md` | Apply the approved pixel-art direction to exploration | 09 |
 
 Tasks 00 through 09 are complete and merged.
 
@@ -91,8 +92,13 @@ identities, data-composed equipment layers, and the cardinal facings required by
 without changing mechanics or introducing inventory.
 
 **Phase F — publish the playtest preview.** Task 09. Produce the same validated Vite build under
-the GitHub Pages project-site base path and deploy it without changing gameplay or publishing
-the private repository.
+the GitHub Pages project-site base path and deploy it from the authorized public,
+non-commercial repository without changing gameplay.
+
+**Phase G — integrate exploration presentation.** Task 10. Replace the painterly and
+debug-placeholder exploration presentation with a native-pixel tilemap, reuse the generic
+modular character model across the exploration-combat flow, and preserve every existing
+exploration and combat behavior.
 
 **Deferred, deliberately.** `src/game/scenes/PrototypeScene.ts` is 1507 lines and orchestrates
 exploration, combat, HUD, console, menu, camera, layout and input. Splitting it is real work
