@@ -8,6 +8,16 @@ import {
   type CombatAppearanceRole,
 } from './combatAppearanceProfiles';
 
+export function resolveVisualAssetPath(
+  path: string,
+  baseUrl: string = import.meta.env.BASE_URL,
+): string {
+  if (!path.startsWith('/assets/') || baseUrl === '/') return path;
+
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${normalizedBaseUrl}${path.slice(1)}`;
+}
+
 export function queueVisualAssets(
   scene: Phaser.Scene,
   catalog: Readonly<Record<VisualAssetKey, VisualAssetCatalogEntry>> = VISUAL_ASSET_CATALOG,
@@ -22,12 +32,13 @@ export function queueVisualAssets(
     if ((!item.loadByDefault && !runtimeProfileKeys.has(item.key)) || item.path === null) continue;
     if (seenKeys.has(item.key)) continue;
     seenKeys.add(item.key);
+    const resolvedPath = resolveVisualAssetPath(item.path);
 
     if (item.resourceKind === 'image') {
-      scene.load.image(item.key, item.path);
+      scene.load.image(item.key, resolvedPath);
       queued.push(item.key);
     } else if (item.resourceKind === 'tilemap-tiled-json') {
-      scene.load.tilemapTiledJSON(item.key, item.path);
+      scene.load.tilemapTiledJSON(item.key, resolvedPath);
       queued.push(item.key);
     } else if (item.resourceKind === 'spritesheet') {
       // Validate metadata explicitly before calling scene.load.spritesheet
@@ -54,7 +65,7 @@ export function queueVisualAssets(
         config.spacing = item.spacing;
       }
 
-      scene.load.spritesheet(item.key, item.path, config);
+      scene.load.spritesheet(item.key, resolvedPath, config);
       queued.push(item.key);
     }
   }

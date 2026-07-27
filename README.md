@@ -6,6 +6,17 @@ The intellectual-property rule that governs every change lives in `AGENTS.md` an
 here. Read it there before writing anything; it is the single source of truth for what may and
 may not enter this repository, and duplicating it would only let the two copies drift apart.
 
+## Online Playtest
+
+The current validated browser build is published as a public, non-commercial GitHub Pages
+preview:
+
+`https://rnabais-hue.github.io/prototipo_d20_jogavel/`
+
+The authoritative repository remains private. The preview is a playtest build, not a source or
+content-pack release. Asset licenses and attribution are recorded in
+`public/assets/PROVENANCE.md`.
+
 ## Current MVP Status
 
 The prototype is playable end to end in the browser: explore a debug map, walk into a combat
@@ -157,7 +168,8 @@ pnpm build
 ```
 
 The same three run in CI on every pull request and on pushes to `master`
-(`.github/workflows/ci.yml`), against a frozen lockfile.
+(`.github/workflows/ci.yml`), against a frozen lockfile. A successful Pages workflow repeats
+the gate and deploys the production build (`.github/workflows/pages.yml`).
 
 For local development:
 

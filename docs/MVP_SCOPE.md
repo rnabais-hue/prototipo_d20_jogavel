@@ -14,6 +14,8 @@ closeout is named, the source file is the reference.
 ### Foundation
 
 - TypeScript project foundation, Vite app shell, Phaser scene, Vitest suite.
+- Public, non-commercial GitHub Pages playtest build from the private authoritative repository,
+  gated by tests, typecheck, and production build.
 - Layer folder structure: `src/rules/`, `src/content/`, `src/game/`, `src/exploration/`,
   `src/combat/`, `src/movement/`, `src/cli/`, `src/narrative/`, `src/ui/`. The last two are
   still empty placeholders.

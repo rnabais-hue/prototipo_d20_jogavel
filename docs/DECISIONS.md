@@ -352,3 +352,21 @@ Reason: Two attribute vocabularies in one repository drift, and neither model al
 Decision: The project adopts a 16-bit-era top-down three-quarter pixel-art visual language. Runtime presentation uses integer scaling without texture interpolation, tilemaps assembled from native tiles instead of stretched environment paintings, and frame-based animation with explicit anticipation, contact, reaction, and recovery. Character appearance is modular data composed from normalized visual slots such as body, outfit, main hand, off hand, accessory, and effect set. Presentation code resolves the declared visual shape and must not branch on a specific archetype, equipment, class, or other content identifier. Assets from multiple permissively licensed sources may be combined only after they conform to one project visual contract for native pixel unit, perspective, palette compatibility, lighting direction, frame layout, anchor, and animation timing. Individual source packs remain replaceable implementation choices rather than architectural dependencies.
 
 Reason: The existing generated-raster pipeline produced independently illustrated 256-pixel frames that were reduced to roughly one grid cell and then enlarged with fractional canvas scaling. That combination caused blur, transparent-padding scale loss, inconsistent anatomy and perspective, and visible frame-to-frame boiling. A coherent pixel-art library removes those failure modes at the asset boundary and is practical for a solo prototype. Modular appearance is required because weapons, armor, roles, and character presentation will change over time; baking those choices into flattened sprites or engine branches would recreate the closed-content coupling prohibited by decisions 0047 and 0048. The first combat-only vertical slice specified in `tasks/07-combat-visual-direction-vertical-slice.md` must prove sharp rendering, actor legibility, motion choreography, and tilemap composition independently before this direction expands to exploration.
+
+## 0058: Public GitHub Pages Playtest Is Narrowly Authorized
+
+Decision: The project owner authorizes a public, non-commercial GitHub Pages playtest built
+from the private authoritative repository. The repository, source, content pack, and packages
+remain private and unpublished. The deployment may contain only original project expression
+and assets whose recorded licenses permit public web use; future purchased assets require a
+fresh license and repository-access review before deployment. This authorization does not
+permit official art, protected setting expression, verbatim rules text, trademarks, or any
+other material forbidden by `AGENTS.md`. Production uses the repository project-site base
+path, and visual asset URLs are resolved against that base at the Phaser loading boundary so
+catalog data stays provider-neutral.
+
+Reason: The owner explicitly requested an online playtest through GitHub Pages. A narrow public
+build makes browser review practical without turning the private repository into a public
+distribution channel. Resolving the deployment base at the loader boundary preserves the
+existing asset catalog contract and keeps hosting concerns out of rules, content, and visual
+profile data.
