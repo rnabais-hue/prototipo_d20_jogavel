@@ -42,15 +42,15 @@ paraphrase your way around this rule.
 
 ### Distribution
 
-This repository is **private and non-commercial**, and stays that way until the project owner
-decides otherwise in writing. Do not add publishing configuration, public deployment, package
-registry metadata, or public build targets.
+This repository remains **private and non-commercial**. Decision 0058 records the project
+owner's narrow authorization for a public, non-commercial GitHub Pages playtest build. That
+authorization does not make the repository public, permit source or content-pack
+redistribution, authorize package publication, or cover assets whose license does not permit
+public web distribution.
 
-The reason is specific and verified: the publisher's open license covers static text media and
-expressly excludes applications and dynamic media, so it does not authorize distributing a
-video game. Private, non-commercial use among a small group falls outside the license's
-restrictions, which is where this project sits today. Any change to distribution is a decision
-for the project owner, not for an agent, and requires its own entry in `docs/DECISIONS.md`.
+The public playtest may contain only original project expression and assets whose recorded
+licenses permit that use. Any broader change to distribution remains a decision for the
+project owner, not for an agent, and requires its own entry in `docs/DECISIONS.md`.
 
 ## Scope Discipline
 

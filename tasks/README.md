@@ -65,9 +65,9 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `06-move-resolution-out-of-content.md` | Sheet resolution logic leaves the content pack | 04 |
 | `07-combat-visual-direction-vertical-slice.md` | Prove the modular pixel-art direction in combat | 05, 06 |
 | `08-modular-character-visual-breadth.md` | Prove modular character identity and facing breadth | 07 |
+| `09-github-pages-playtest-preview.md` | Publish the validated browser build as a Pages preview | 08 |
 
-Tasks 00 through 07 are complete and merged. Task 08 is implemented and human-approved on its
-dedicated branch and awaits review and merge through its pull request.
+Tasks 00 through 08 are complete and merged. Task 09 is in progress on its dedicated branch.
 
 ## Plan of record
 
@@ -89,6 +89,10 @@ vertical slice before applying the direction to exploration.
 **Phase E — prove modular character breadth.** Task 08. Demonstrate distinct character
 identities, data-composed equipment layers, and the cardinal facings required by board movement
 without changing mechanics or introducing inventory.
+
+**Phase F — publish the playtest preview.** Task 09. Produce the same validated Vite build under
+the GitHub Pages project-site base path and deploy it without changing gameplay or publishing
+the private repository.
 
 **Deferred, deliberately.** `src/game/scenes/PrototypeScene.ts` is 1507 lines and orchestrates
 exploration, combat, HUD, console, menu, camera, layout and input. Splitting it is real work
