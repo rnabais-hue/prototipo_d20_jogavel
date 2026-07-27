@@ -370,3 +370,21 @@ build makes browser review practical without turning the private repository into
 distribution channel. Resolving the deployment base at the loader boundary preserves the
 existing asset catalog contract and keeps hosting concerns out of rules, content, and visual
 profile data.
+
+## 0059: The Authoritative Repository Is Public And Non-Commercial
+
+Decision: The project owner explicitly authorizes changing the authoritative GitHub repository
+from private to public so the non-commercial GitHub Pages playtest can be hosted on the current
+account plan. Public visibility includes access to the source, history, content data, and
+assets and allows third parties to clone, index, and fork the repository under GitHub's
+platform terms. Only original project expression and assets whose recorded licenses permit
+public repository and web distribution may remain. This decision does not authorize package
+publication, commercial use, official art, protected setting expression, verbatim rules text,
+trademarks, or future purchased assets without a fresh license and repository-access review.
+This decision supersedes the private-repository boundary in decisions 0047 and 0058 while
+preserving their IP, provenance, non-commercial, engine/content, and hosting constraints.
+
+Reason: GitHub reported that the owner's current plan does not support Pages for this private
+repository. The owner chose public repository visibility rather than a paid plan or a separate
+deployment repository. The project remains non-commercial, but the decision records that
+public visibility is discoverable and copyable regardless of expected audience size.

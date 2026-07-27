@@ -8,7 +8,7 @@ through a pull request.
 ## Objective
 
 Publish the current browser prototype as a public, non-commercial GitHub Pages project site
-while the authoritative repository remains private.
+from the public authoritative repository.
 
 The deployment must reproduce the validated production build. It must not change game rules,
 content data, controls, statistics, combat outcomes, dependencies, or the lockfile.
@@ -36,8 +36,9 @@ There is no `CONTEXT.md` in `src/game/` or `src/game/visual/`.
 
 ## Distribution boundary
 
-- The repository remains private and non-commercial.
-- The Pages output is a public playtest build, not a source release or package publication.
+- The repository and Pages output are public and non-commercial.
+- Public visibility permits access, cloning, indexing, and forking, but is not package
+  publication or permission for commercial use.
 - Only original project expression and assets whose provenance records permit public web use
   may enter the deployed artifact.
 - Future purchased assets require their own license and repository-access review before they
