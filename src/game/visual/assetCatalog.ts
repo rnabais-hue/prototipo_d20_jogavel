@@ -72,6 +72,16 @@ export const VISUAL_ASSET_CATALOG: Readonly<Record<VisualAssetKey, VisualAssetCa
   [VISUAL_ASSET_KEYS.combatPlayerMainHandSpear]: pixelActorSheet(VISUAL_ASSET_KEYS.combatPlayerMainHandSpear, '/assets/actors/combat/player/combat-player-main-hand-spear.png', 'player'),
   [VISUAL_ASSET_KEYS.combatEnemyBody]: pixelActorSheet(VISUAL_ASSET_KEYS.combatEnemyBody, '/assets/actors/combat/enemy/combat-enemy-body.png', 'enemy'),
   [VISUAL_ASSET_KEYS.combatEnemyMainHandAxe]: pixelActorSheet(VISUAL_ASSET_KEYS.combatEnemyMainHandAxe, '/assets/actors/combat/enemy/combat-enemy-main-hand-axe.png', 'enemy'),
+  [VISUAL_ASSET_KEYS.combatBreadthBody]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthBody, '/assets/actors/combat/breadth/combat-breadth-body.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthOutfitCombatant]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthOutfitCombatant, '/assets/actors/combat/breadth/combat-breadth-outfit-combatant.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthOutfitCaster]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthOutfitCaster, '/assets/actors/combat/breadth/combat-breadth-outfit-caster.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthOutfitSpecialist]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthOutfitSpecialist, '/assets/actors/combat/breadth/combat-breadth-outfit-specialist.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthMainHandSword]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthMainHandSword, '/assets/actors/combat/breadth/combat-breadth-main-hand-sword.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthMainHandSpear]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthMainHandSpear, '/assets/actors/combat/breadth/combat-breadth-main-hand-spear.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthMainHandStaff]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthMainHandStaff, '/assets/actors/combat/breadth/combat-breadth-main-hand-staff.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthOffHandBow]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthOffHandBow, '/assets/actors/combat/breadth/combat-breadth-off-hand-bow.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthAccessoryCaster]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthAccessoryCaster, '/assets/actors/combat/breadth/combat-breadth-accessory-caster.png', 'player', 7, false),
+  [VISUAL_ASSET_KEYS.combatBreadthAccessorySpecialist]: pixelActorSheet(VISUAL_ASSET_KEYS.combatBreadthAccessorySpecialist, '/assets/actors/combat/breadth/combat-breadth-accessory-specialist.png', 'player', 7, false),
   [VISUAL_ASSET_KEYS.surveyPoint]: entry(VISUAL_ASSET_KEYS.surveyPoint, 'point-of-interest', null, 18, 18, center, 'repository-graphics', 'survey'),
   [VISUAL_ASSET_KEYS.switchPoint]: createSpritesheetEntry(VISUAL_ASSET_KEYS.switchPoint, 'point-of-interest', '/assets/world/points-of-interest/A4-switch-S1R1-spritesheet.png', 18, 18, center, 'generated-raster', 'switch', { frameWidth: 144, frameHeight: 144 }, true),
   [VISUAL_ASSET_KEYS.exitPoint]: createSpritesheetEntry(VISUAL_ASSET_KEYS.exitPoint, 'point-of-interest', '/assets/world/points-of-interest/A4-exit-X1R1-spritesheet.png', 24, 24, center, 'generated-raster', 'exit', { frameWidth: 192, frameHeight: 192 }, true),
@@ -154,6 +164,8 @@ function pixelActorSheet(
   key: VisualAssetKey,
   path: string,
   fallback: 'player' | 'enemy',
+  endFrame = 19,
+  loadByDefault = true,
 ): VisualAssetCatalogEntry {
   return createSpritesheetEntry(
     key,
@@ -164,8 +176,8 @@ function pixelActorSheet(
     Object.freeze({ x: 0.5, y: 0.9375 }),
     'permissive-external',
     fallback,
-    { frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 19 },
-    true,
+    { frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame },
+    loadByDefault,
   );
 }
 

@@ -1,6 +1,12 @@
 import Phaser from 'phaser';
 import { VISUAL_ASSET_CATALOG, type VisualAssetCatalogEntry } from './assetCatalog';
 import type { VisualAssetKey } from './assetKeys';
+import {
+  getRequestedCombatAppearanceId,
+  resolveCombatAppearanceLayers,
+  resolveCombatAppearanceProfile,
+  type CombatAppearanceRole,
+} from './combatAppearanceProfiles';
 
 export function queueVisualAssets(
   scene: Phaser.Scene,
@@ -8,9 +14,12 @@ export function queueVisualAssets(
 ): readonly VisualAssetKey[] {
   const queued: VisualAssetKey[] = [];
   const seenKeys = new Set<string>();
+  const runtimeProfileKeys = catalog === VISUAL_ASSET_CATALOG
+    ? getRuntimeCombatProfileAssetKeys()
+    : new Set<VisualAssetKey>();
 
   for (const item of Object.values(catalog)) {
-    if (!item.loadByDefault || item.path === null) continue;
+    if ((!item.loadByDefault && !runtimeProfileKeys.has(item.key)) || item.path === null) continue;
     if (seenKeys.has(item.key)) continue;
     seenKeys.add(item.key);
 
@@ -50,4 +59,19 @@ export function queueVisualAssets(
     }
   }
   return queued;
+}
+
+function getRuntimeCombatProfileAssetKeys(): ReadonlySet<VisualAssetKey> {
+  const search = typeof window === 'undefined' ? '' : window.location.search;
+  const keys = new Set<VisualAssetKey>();
+  for (const role of ['player', 'enemy'] satisfies readonly CombatAppearanceRole[]) {
+    const profile = resolveCombatAppearanceProfile(
+      role,
+      getRequestedCombatAppearanceId(search, role),
+    );
+    for (const layer of resolveCombatAppearanceLayers(profile)) {
+      keys.add(layer.textureKey);
+    }
+  }
+  return keys;
 }

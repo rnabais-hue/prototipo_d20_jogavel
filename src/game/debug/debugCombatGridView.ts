@@ -158,6 +158,7 @@ export function createDebugCombatGridView(
           }, true);
         } else if (hasMoved) {
           // Play movement interpolation tween from previous position
+          handle.setPresentationFacingFromGridSegment?.(lastCell!, combatant.cell);
           const prevWorld = projectCombatCellToWorld(lastCell!, layout);
           handle.snapToAuthoritativeState(prevWorld, {
             active: combatant.active,

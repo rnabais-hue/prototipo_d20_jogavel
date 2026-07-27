@@ -9,8 +9,10 @@ import { playCombatAppearanceAnimation } from './actorAnimations';
 import {
   getRequestedCombatAppearanceId,
   resolveCombatAppearanceProfile,
+  resolveFacingFromGridDelta,
   type CombatAppearanceProfile,
   type CombatAppearanceState,
+  type CombatFacing,
 } from './combatAppearanceProfiles';
 
 export interface CombatantViewHandle {
@@ -22,6 +24,7 @@ export interface CombatantViewHandle {
   activeTweens: Phaser.Tweens.Tween[];
 
   projectAuthoritativePosition(cell: GridCell, layout: DebugCombatGridLayout): { x: number; y: number };
+  setPresentationFacingFromGridSegment?(from: GridCell, to: GridCell): void;
   animatePresentationPosition(targetWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   playAnticipation(targetWorld: { x: number; y: number }, duration: number, onComplete?: () => void): void;
   playLunge(targetWorld: { x: number; y: number }, duration: number): void;
@@ -42,6 +45,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
   private scene: Phaser.Scene;
   private lastPresentationOptions?: { active: boolean; defeated: boolean; isTarget: boolean; cellSize: number };
   private readonly appearanceProfile: CombatAppearanceProfile;
+  private facing: CombatFacing = 'south';
   activeTweens: Phaser.Tweens.Tween[] = [];
 
   constructor(scene: Phaser.Scene, participantId: string, isPlayer: boolean) {
@@ -54,6 +58,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       role,
       getRequestedCombatAppearanceId(search, role),
     );
+    this.facing = this.appearanceProfile.facing;
 
     // Create the container at (0, 0) initially
     this.container = scene.add
@@ -64,6 +69,13 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
 
   projectAuthoritativePosition(cell: GridCell, layout: DebugCombatGridLayout): { x: number; y: number } {
     return projectCombatCellToWorld(cell, layout);
+  }
+
+  setPresentationFacingFromGridSegment(from: GridCell, to: GridCell): void {
+    this.facing = resolveFacingFromGridDelta(this.facing, {
+      x: to.x - from.x,
+      y: to.y - from.y,
+    });
   }
 
   private addTween(config: Phaser.Types.Tweens.TweenBuilderConfig): Phaser.Tweens.Tween {
@@ -85,6 +97,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       getCombatantActorSprites(this.container),
       this.appearanceProfile,
       state,
+      this.facing,
     );
   }
 
@@ -333,6 +346,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       cellSize: options.cellSize,
       isTarget: options.isTarget,
       appearanceProfile: this.appearanceProfile,
+      facing: this.facing,
     });
   }
 
@@ -406,6 +420,7 @@ export class PhaserCombatantViewHandle implements CombatantViewHandle {
       cellSize: options.cellSize,
       isTarget: options.isTarget,
       appearanceProfile: this.appearanceProfile,
+      facing: this.facing,
     });
   }
 
