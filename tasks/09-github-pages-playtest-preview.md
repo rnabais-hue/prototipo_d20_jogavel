@@ -2,8 +2,9 @@
 
 ## Status
 
-Implementation authorized by the project owner. Work only on a dedicated branch and merge only
-through a pull request.
+Complete. The implementation, initial Pages enablement, and public-repository authorization
+were merged through dedicated pull requests. The live deployment is recorded in
+`docs/GITHUB_PAGES_PLAYTEST_PREVIEW_CLOSEOUT_V1.md`.
 
 ## Objective
 
