@@ -1,6 +1,6 @@
 ﻿# Agent Instructions
 
-This repository is a local and private **custom d20-inspired tactical RPG prototype**.
+This repository is a public and non-commercial **custom d20-inspired tactical RPG prototype**.
 
 ## Non-Negotiable IP Rule
 
@@ -42,15 +42,15 @@ paraphrase your way around this rule.
 
 ### Distribution
 
-This repository remains **private and non-commercial**. Decision 0058 records the project
-owner's narrow authorization for a public, non-commercial GitHub Pages playtest build. That
-authorization does not make the repository public, permit source or content-pack
-redistribution, authorize package publication, or cover assets whose license does not permit
-public web distribution.
+Decision 0059 records the project owner's explicit authorization to make this repository
+**public and non-commercial** so its GitHub Pages playtest can be hosted on the current account
+plan. Public visibility permits access, cloning, indexing, and forking under GitHub's platform
+terms; it does not authorize package publication or cover assets whose license does not permit
+public repository and web distribution.
 
-The public playtest may contain only original project expression and assets whose recorded
-licenses permit that use. Any broader change to distribution remains a decision for the
-project owner, not for an agent, and requires its own entry in `docs/DECISIONS.md`.
+The public repository and playtest may contain only original project expression and assets
+whose recorded licenses permit those uses. Any commercial use or broader distribution channel
+remains a decision for the project owner and requires its own entry in `docs/DECISIONS.md`.
 
 ## Scope Discipline
 

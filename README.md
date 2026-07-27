@@ -1,6 +1,6 @@
 ﻿# Custom d20-Inspired Tactical RPG Prototype
 
-This is a local and private **custom d20-inspired tactical RPG prototype** built with TypeScript, Phaser, Vite, and Vitest.
+This is a public and non-commercial **custom d20-inspired tactical RPG prototype** built with TypeScript, Phaser, Vite, and Vitest.
 
 The intellectual-property rule that governs every change lives in `AGENTS.md` and is not restated
 here. Read it there before writing anything; it is the single source of truth for what may and
@@ -13,8 +13,8 @@ preview:
 
 `https://rnabais-hue.github.io/prototipo_d20_jogavel/`
 
-The authoritative repository remains private. The preview is a playtest build, not a source or
-content-pack release. Asset licenses and attribution are recorded in
+The authoritative repository is public under the project owner's decision 0059. The preview
+remains non-commercial, and asset licenses and attribution are recorded in
 `public/assets/PROVENANCE.md`.
 
 ## Current MVP Status

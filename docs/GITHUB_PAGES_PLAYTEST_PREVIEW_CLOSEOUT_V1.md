@@ -7,7 +7,7 @@ project site:
 
 `https://rnabais-hue.github.io/prototipo_d20_jogavel/`
 
-The authoritative repository remains private.
+The authoritative repository is public and non-commercial by decision 0059.
 
 ## Delivered
 
@@ -20,9 +20,10 @@ The authoritative repository remains private.
 
 ## Distribution boundary
 
-Decision 0058 is the project owner's narrow authorization for this public playtest. It is not
-authorization to publish the repository, source, content pack, packages, or future commercial
-assets. Asset provenance remains recorded in `public/assets/PROVENANCE.md`.
+Decision 0058 authorized the public playtest, and decision 0059 subsequently authorized public
+repository visibility for hosting on the current GitHub plan. Neither decision authorizes
+package publication, commercial use, or future commercial assets without a fresh license and
+repository-access review. Asset provenance remains recorded in `public/assets/PROVENANCE.md`.
 
 ## Validation
 
