@@ -27,5 +27,9 @@ repository-access review. Asset provenance remains recorded in `public/assets/PR
 
 ## Validation
 
-The local validation gate and the deployed URL were verified before this closeout was marked
-complete.
+- GitHub Actions run `30266144935` completed both `build` and `deploy` jobs successfully.
+- The workflow passed 60 test files and 469 tests, typecheck, and production build before
+  uploading the artifact.
+- The published page, JavaScript bundle, stylesheet, combat map JSON, modular player sprite,
+  and `PROVENANCE.md` each returned HTTP 200.
+- The live URL was verified before this closeout was marked complete.

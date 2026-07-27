@@ -67,7 +67,7 @@ changed behaviour and has failed, unless the task file explicitly authorises the
 | `08-modular-character-visual-breadth.md` | Prove modular character identity and facing breadth | 07 |
 | `09-github-pages-playtest-preview.md` | Publish the validated browser build as a Pages preview | 08 |
 
-Tasks 00 through 08 are complete and merged. Task 09 is in progress on its dedicated branch.
+Tasks 00 through 09 are complete and merged.
 
 ## Plan of record
 
